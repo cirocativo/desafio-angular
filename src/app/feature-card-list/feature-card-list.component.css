@@ -1,0 +1,15 @@
+ul {
+  list-style-type: none;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+li {
+  width: 30%;
+  min-width: 15rem;
+  max-width: 17rem;
+  padding: 0.5rem;
+  box-shadow: 3px 3px 10px #000;
+  background-color: #fff;
+}
