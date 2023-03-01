@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Are you sure?</h2>
+<div mat-dialog-content>
+  <p>
+    You're about to delete this feature: <strong>{{ data.name }}</strong>
+  </p>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="cancel()">No, I regret</button>
+  <button mat-raised-button color="warn" (click)="delete()">Yes, please</button>
+</div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { features } from 'src/assets/features';
+import { getFeatures } from 'src/database/controllers';
 
 @Component({
   selector: 'feature-card-list',
@@ -7,5 +7,5 @@ import { features } from 'src/assets/features';
   styleUrls: ['./feature-card-list.component.css'],
 })
 export class FeatureCardListComponent {
-  features = features;
+  features = getFeatures();
 }

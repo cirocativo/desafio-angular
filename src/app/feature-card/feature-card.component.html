@@ -6,7 +6,15 @@
   }}
 </p>
 <nav>
-  <button mat-raised-button color="primary">Details</button>
+  <button mat-raised-button color="primary" (click)="openDetailsModal()">
+    Details
+  </button>
   <button mat-raised-button color="primary">Edit</button>
-  <button mat-raised-button color="warn">Delete</button>
+  <button
+    mat-raised-button
+    color="warn"
+    (click)="openDeleteConfirmationModal()"
+  >
+    Delete
+  </button>
 </nav>

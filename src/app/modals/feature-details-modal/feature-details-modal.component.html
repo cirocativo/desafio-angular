@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>{{ data.name }}</h2>
+<div mat-dialog-content>
+  <p>ID: {{ data.id }}</p>
+  <p>Description: {{ data.description }}</p>
+  <p><strong>Services:</strong></p>
+  <service-card-list [feature]="data"></service-card-list>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">Close</button>
+</div>
