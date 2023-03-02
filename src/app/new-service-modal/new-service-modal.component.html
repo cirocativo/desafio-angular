@@ -1,0 +1,47 @@
+<h2>New Service</h2>
+<div mat-dialog-content>
+  <form [formGroup]="newServiceForm">
+    <mat-form-field>
+      <mat-label>Method</mat-label>
+      <!-- <input matInput type="text"  /> -->
+      <mat-select formControlName="method" name="method">
+        <mat-option value="GET">GET</mat-option>
+        <mat-option value="POST">POST</mat-option>
+        <mat-option value="PATCH">PATCH</mat-option>
+        <mat-option value="PUT">PUT</mat-option>
+        <mat-option value="DELETE">DELETE</mat-option>
+        <mat-option value="HEAD">HEAD</mat-option>
+        <mat-option value="CONNECT">CONNECT</mat-option>
+        <mat-option value="OPTIONS">OPTIONS</mat-option>
+        <mat-option value="TRACE">TRACE</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Endpoint</mat-label>
+      <input matInput type="text" formControlName="endpoint" name="endpoint" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="description"
+        name="description"
+      />
+    </mat-form-field>
+
+    <div mat-dialog-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        [mat-dialog-close]="newServiceForm.value"
+        [disabled]="!newServiceForm.valid"
+      >
+        Create Service
+      </button>
+      <button mat-raised-button (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

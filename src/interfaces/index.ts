@@ -4,9 +4,12 @@ export interface IFeatureService {
   description: string;
 }
 
-export interface IFeature {
-  id: string;
+export interface IFeatureRequest {
   name: string;
   description: string;
   services: IFeatureService[];
+}
+
+export interface IFeature extends IFeatureRequest {
+  id: string;
 }

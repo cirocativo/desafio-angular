@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getFeatures } from 'src/database/controllers';
+import { getFeatures } from 'src/database/features.service';
 
 @Component({
   selector: 'feature-card-list',

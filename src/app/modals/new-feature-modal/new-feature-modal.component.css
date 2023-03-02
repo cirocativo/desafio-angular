@@ -1,0 +1,14 @@
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  margin-left: 24px;
+}
+
+.service-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

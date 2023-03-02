@@ -1,0 +1,48 @@
+<h2>New Feature</h2>
+<div mat-dialog-content>
+  <form [formGroup]="newFeatureForm" (ngSubmit)="create()">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput type="text" formControlName="name" name="name" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="description"
+        name="description"
+      />
+    </mat-form-field>
+
+    <section *ngIf="services.length > 0">
+      <h3>Services:</h3>
+      <div *ngFor="let service of services; let i = index" class="service-list">
+        <p>
+          method: {{ service.method }} <br />
+          endpoint: {{ service.endpoint }} <br />
+          description: {{ service.description }}
+        </p>
+        <button mat-icon-button (click)="deleteServiceClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </section>
+    <div mat-dialog-actions>
+      <button
+        class="addServiceButton"
+        mat-stroked-button
+        (click)="newServiceClicked()"
+        type="button"
+      >
+        Add Service
+      </button>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!newFeatureForm.valid">
+        Create Feature
+      </button>
+      <button mat-raised-button (click)="cancel()" type="reset">Cancel</button>
+    </div>
+  </form>
+</div>
