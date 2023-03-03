@@ -1,6 +1,6 @@
 <h2>New Service</h2>
 <div mat-dialog-content>
-  <form [formGroup]="newServiceForm">
+  <form [formGroup]="newServiceForm" (ngSubmit)="create()">
     <mat-form-field>
       <mat-label>Method</mat-label>
       <!-- <input matInput type="text"  /> -->
@@ -36,7 +36,6 @@
       <button
         mat-raised-button
         color="primary"
-        [mat-dialog-close]="newServiceForm.value"
         [disabled]="!newServiceForm.valid"
         type="submit"
       >

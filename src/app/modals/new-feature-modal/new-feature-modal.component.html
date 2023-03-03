@@ -39,7 +39,12 @@
       </button>
     </div>
     <div mat-dialog-actions>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!newFeatureForm.valid">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!newFeatureForm.valid"
+      >
         Create Feature
       </button>
       <button mat-raised-button (click)="cancel()" type="reset">Cancel</button>

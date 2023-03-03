@@ -28,10 +28,12 @@ export class ServiceCardListComponent {
   }
 
   addButtonClicked() {
-    const dialogRef = this.dialog.open(NewServiceModalComponent);
+    const dialogRef = this.dialog.open(NewServiceModalComponent, {
+      data: { feature: this.feature },
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) addServiceToFeature(this.feature, result);
+      //if (result) addServiceToFeature(this.feature, result);
     });
   }
 

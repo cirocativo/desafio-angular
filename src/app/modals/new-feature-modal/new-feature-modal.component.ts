@@ -28,15 +28,17 @@ export class NewFeatureModalComponent {
   ) {}
 
   newServiceClicked(): void {
-    const dialogRef = this.dialog.open(NewServiceModalComponent);
+    const dialogRef = this.dialog.open(NewServiceModalComponent, {
+      data: this.services,
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.services.push(result);
-        this.snackbar.open('Service added', undefined, {
-          duration: 1500,
-        });
-      }
+      // if (result) {
+      //   this.services.push(result);
+      //   this.snackbar.open('Service added', undefined, {
+      //     duration: 1500,
+      //   });
+      // }
     });
   }
 

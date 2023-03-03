@@ -49,14 +49,10 @@ export class EditServiceModalComponent {
         duration: 1500,
       });
       this.cancel();
-    } catch (error) {
-      this.snackbar.open(
-        'There was an error. Please verify your informations and try again',
-        undefined,
-        {
-          duration: 3000,
-        }
-      );
+    } catch (error: any) {
+      this.snackbar.open(error.message, undefined, {
+        duration: 3000,
+      });
     }
   }
 

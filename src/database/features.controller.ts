@@ -35,6 +35,8 @@ export function deleteFeature(feature: IFeature): void {
 }
 
 export function addServiceToFeature(feature: IFeature, service: IService) {
+  checkServiceExclusivity(service);
+
   const featureIndex = featuresBD.findIndex((f) => feature.id === f.id);
 
   featuresBD[featureIndex].services.push(service);
@@ -46,6 +48,15 @@ export function updateFeatureServiceFromIndex(
   service: IService
 ) {
   const featureIndex = featuresBD.findIndex((f) => feature.id === f.id);
+
+  const oldService = featuresBD[featureIndex].services[serviceIndex];
+
+  if (
+    service.method != oldService.method ||
+    service.endpoint != oldService.endpoint
+  ) {
+    checkServiceExclusivity(service);
+  }
 
   featuresBD[featureIndex].services[serviceIndex] = service;
 }
@@ -64,5 +75,18 @@ function checkFeatureExclusivity(feature: IFeature) {
     (f) => f.name === feature.name
   );
 
-  if (featureNameAlreadyExists) throw new Error('Feature name already exists');
+  if (featureNameAlreadyExists)
+    throw new Error('This feature name already exists');
+}
+
+export function checkServiceExclusivity(service: IService) {
+  const repeatedService = featuresBD.some((feature) =>
+    feature.services.some(
+      (s) => s.method === service.method && s.endpoint === service.endpoint
+    )
+  );
+
+  if (repeatedService) {
+    throw new Error('This service already exists');
+  }
 }
