@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FeatureCardListComponent } from './feature-card-list/feature-card-list.component';
@@ -50,6 +51,7 @@ import { EditServiceModalComponent } from './modals/edit-service-modal/edit-serv
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSnackBarModule,
     ReactiveFormsModule,
   ],
   providers: [],

@@ -1,10 +1,7 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewServiceModalComponent } from 'src/app/new-service-modal/new-service-modal.component';
 import { createFeature } from 'src/database/features.controller';
 import { IService } from 'src/interfaces';
@@ -26,27 +23,45 @@ export class NewFeatureModalComponent {
   constructor(
     private fbFeature: FormBuilder,
     public dialogRef: MatDialogRef<NewFeatureModalComponent>,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackbar: MatSnackBar
   ) {}
 
   newServiceClicked(): void {
     const dialogRef = this.dialog.open(NewServiceModalComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.services.push(result);
+      if (result) {
+        this.services.push(result);
+        this.snackbar.open('Service added', undefined, {
+          duration: 1500,
+        });
+      }
     });
   }
 
   deleteServiceClicked(index: number): void {
     this.services.splice(index, 1);
+    this.snackbar.open('Service removed', undefined, {
+      duration: 1500,
+    });
   }
 
   create() {
     this.newFeatureForm.value.services = this.services;
+    try {
+      createFeature(this.newFeatureForm.value);
 
-    createFeature(this.newFeatureForm.value);
+      this.snackbar.open('Feature created successfully!', undefined, {
+        duration: 1500,
+      });
 
-    this.cancel();
+      this.cancel();
+    } catch (e) {
+      this.snackbar.open('This feature name already exists', undefined, {
+        duration: 3000,
+      });
+    }
   }
 
   cancel(): void {

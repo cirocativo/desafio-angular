@@ -4,6 +4,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
+
 import { IFeature } from 'src/interfaces';
 import { EditFeatureModalComponent } from '../edit-feature-modal/edit-feature-modal.component';
 

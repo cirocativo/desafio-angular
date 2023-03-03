@@ -9,6 +9,8 @@ export function createFeature(feature: IFeatureRequest): void {
 
   const newFeature: IFeature = { ...feature, id: id };
 
+  checkFeatureExclusivity(newFeature);
+
   featuresBD.push(newFeature);
 }
 
@@ -18,6 +20,9 @@ export function getFeatures(): IFeature[] {
 
 export function updateFeature(id: string, feature: IFeature) {
   const featureToUpdateIndex = featuresBD.findIndex((f) => f.id === id);
+
+  if (feature.name != featuresBD[featureToUpdateIndex].name)
+    checkFeatureExclusivity(feature);
 
   featuresBD[featureToUpdateIndex].description = feature.description;
   featuresBD[featureToUpdateIndex].name = feature.name;
@@ -52,4 +57,12 @@ export function deleteFeatureServiceFromIndex(
   const featureIndex = featuresBD.findIndex((f) => feature.id === f.id);
 
   featuresBD[featureIndex].services.splice(serviceIndex, 1);
+}
+
+function checkFeatureExclusivity(feature: IFeature) {
+  const featureNameAlreadyExists = featuresBD.find(
+    (f) => f.name === feature.name
+  );
+
+  if (featureNameAlreadyExists) throw new Error('Feature name already exists');
 }

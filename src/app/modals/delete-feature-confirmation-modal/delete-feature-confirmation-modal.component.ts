@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { deleteFeature } from 'src/database/features.controller';
 
 import { IFeature } from 'src/interfaces';
@@ -12,6 +13,7 @@ import { IFeature } from 'src/interfaces';
 export class DeleteFeatureConfirmationModalComponent {
   feature: IFeature;
   constructor(
+    private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<DeleteFeatureConfirmationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IFeature
   ) {
@@ -22,7 +24,9 @@ export class DeleteFeatureConfirmationModalComponent {
   }
   delete(): void {
     deleteFeature(this.feature);
-
+    this.snackbar.open('Feature deleted successfully!', undefined, {
+      duration: 1500,
+    });
     this.cancel();
   }
 }

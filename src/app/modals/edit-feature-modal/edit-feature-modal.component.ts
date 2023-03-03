@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { updateFeature } from 'src/database/features.controller';
 import { IFeature } from 'src/interfaces';
 
@@ -10,6 +11,8 @@ import { IFeature } from 'src/interfaces';
   styleUrls: ['./edit-feature-modal.component.css'],
 })
 export class EditFeatureModalComponent {
+  feature: IFeature = {} as IFeature;
+
   public updateFeatureForm: FormGroup = this.fbFeature.group({
     name: ['', [Validators.required]],
     description: [''],
@@ -17,14 +20,25 @@ export class EditFeatureModalComponent {
 
   constructor(
     private fbFeature: FormBuilder,
+    private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<EditFeatureModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IFeature
-  ) {}
+  ) {
+    Object.assign(this.feature, data);
+  }
 
   update() {
-    updateFeature(this.data.id, this.updateFeatureForm.value);
-
-    this.cancel();
+    try {
+      updateFeature(this.data.id, this.updateFeatureForm.value);
+      this.snackbar.open('Feature updated successfully!', undefined, {
+        duration: 1500,
+      });
+      this.cancel();
+    } catch (error) {
+      this.snackbar.open('This feature name already exists', undefined, {
+        duration: 3000,
+      });
+    }
   }
 
   cancel(): void {

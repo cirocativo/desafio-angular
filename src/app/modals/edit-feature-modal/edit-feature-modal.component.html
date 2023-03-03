@@ -8,7 +8,7 @@
         type="text"
         formControlName="name"
         name="name"
-        [(ngModel)]="data.name"
+        [(ngModel)]="feature.name"
       />
     </mat-form-field>
     <mat-form-field>
@@ -18,7 +18,7 @@
         type="text"
         formControlName="description"
         name="description"
-        [(ngModel)]="data.description"
+        [(ngModel)]="feature.description"
       />
     </mat-form-field>
 
@@ -31,6 +31,7 @@
       >
         Update Feature
       </button>
+      <button mat-raised-button (click)="cancel()" type="reset">Close</button>
     </div>
   </form>
 </div>

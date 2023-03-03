@@ -3,7 +3,11 @@
   <form [formGroup]="updateServiceForm" (ngSubmit)="update()">
     <mat-form-field>
       <mat-label>Method</mat-label>
-      <mat-select formControlName="method" name="method">
+      <mat-select
+        formControlName="method"
+        name="method"
+        [(ngModel)]="service.method"
+      >
         <mat-option value="GET">GET</mat-option>
         <mat-option value="POST">POST</mat-option>
         <mat-option value="PATCH">PATCH</mat-option>
@@ -47,6 +51,7 @@
       >
         Update Feature
       </button>
+      <button mat-raised-button (click)="cancel()" type="reset">Close</button>
     </div>
   </form>
 </div>

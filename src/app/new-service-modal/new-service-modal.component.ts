@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { IService } from 'src/interfaces';
 
 @Component({
   selector: 'app-new-service-modal',
@@ -11,7 +10,15 @@ import { IService } from 'src/interfaces';
 export class NewServiceModalComponent {
   public newServiceForm: FormGroup = this.fb.group({
     method: ['', [Validators.required]],
-    endpoint: ['', [Validators.required]],
+    endpoint: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(
+          /^\/(?:[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*(?:\/:[a-zA-Z0-9_-]+)?)+(?!\/|:)$/
+        ),
+      ],
+    ],
     description: [''],
   });
 
@@ -20,11 +27,6 @@ export class NewServiceModalComponent {
 
     public dialogRef: MatDialogRef<NewServiceModalComponent>
   ) {}
-
-  create() {
-    console.log(this.newServiceForm.value);
-    //createFeature(this.newFeatureForm.value);
-  }
 
   cancel(): void {
     this.dialogRef.close();

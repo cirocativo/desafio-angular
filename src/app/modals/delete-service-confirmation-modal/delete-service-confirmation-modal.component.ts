@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { deleteFeatureServiceFromIndex } from 'src/database/features.controller';
 import { IServiceHandler, IFeature, IService } from 'src/interfaces';
 
@@ -13,6 +14,7 @@ export class DeleteServiceConfirmationModalComponent {
   feature: IFeature;
   service: IService;
   constructor(
+    private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<DeleteServiceConfirmationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IServiceHandler
   ) {
@@ -25,7 +27,9 @@ export class DeleteServiceConfirmationModalComponent {
   }
   delete(): void {
     deleteFeatureServiceFromIndex(this.feature, this.serviceIndex);
-
+    this.snackbar.open('Service deleted successfully!', undefined, {
+      duration: 1500,
+    });
     this.cancel();
   }
 }
