@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { IFeatureService } from 'src/interfaces';
+import { IService } from 'src/interfaces';
 
 @Component({
   selector: 'app-new-service-modal',

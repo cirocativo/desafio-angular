@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IFeature } from 'src/interfaces';
-import { DeleteConfirmationModalComponent } from '../modals/delete-confirmation-modal/delete-confirmation-modal.component';
+import { DeleteFeatureConfirmationModalComponent } from '../modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { FeatureDetailsModalComponent } from '../modals/feature-details-modal/feature-details-modal.component';
 
 @Component({
@@ -19,18 +19,17 @@ export class FeatureCardComponent {
       data: this.feature,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   openDeleteConfirmationModal(): void {
-    const dialogRef = this.dialog.open(DeleteConfirmationModalComponent, {
-      data: this.feature,
-    });
+    const dialogRef = this.dialog.open(
+      DeleteFeatureConfirmationModalComponent,
+      {
+        data: this.feature,
+      }
+    );
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 }

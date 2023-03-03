@@ -6,8 +6,8 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { NewServiceModalComponent } from 'src/app/new-service-modal/new-service-modal.component';
-import { createFeature } from 'src/database/features.service';
-import { IFeatureService } from 'src/interfaces';
+import { createFeature } from 'src/database/features.controller';
+import { IService } from 'src/interfaces';
 
 @Component({
   selector: 'app-new-feature-modal',
@@ -15,7 +15,7 @@ import { IFeatureService } from 'src/interfaces';
   styleUrls: ['./new-feature-modal.component.css'],
 })
 export class NewFeatureModalComponent {
-  services: IFeatureService[] = [];
+  services: IService[] = [];
 
   public newFeatureForm: FormGroup = this.fbFeature.group({
     name: ['', [Validators.required]],

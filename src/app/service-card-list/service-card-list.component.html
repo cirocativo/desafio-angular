@@ -1,5 +1,19 @@
 <ul>
-  <li *ngFor="let service of feature.services" [ngClass]="'card'">
+  <li
+    *ngFor="let service of feature.services; let i = index"
+    [ngClass]="'card'"
+  >
     <service-card [service]="service"></service-card>
+    <button mat-icon-button (click)="editServiceClicked(feature, i)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button (click)="deleteServiceClicked(feature, i)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </li>
+  <li class="add-button-li">
+    <button mat-fab color="primary" (click)="addButtonClicked()">
+      <mat-icon>add</mat-icon>
+    </button>
   </li>
 </ul>

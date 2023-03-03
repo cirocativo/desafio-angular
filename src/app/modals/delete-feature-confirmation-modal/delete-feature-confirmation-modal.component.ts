@@ -1,18 +1,18 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { deleteFeature } from 'src/database/features.service';
+import { deleteFeature } from 'src/database/features.controller';
 
 import { IFeature } from 'src/interfaces';
 
 @Component({
   selector: 'delete-confirmation-modal',
-  templateUrl: './delete-confirmation-modal.component.html',
-  styleUrls: ['./delete-confirmation-modal.component.css'],
+  templateUrl: './delete-feature-confirmation-modal.component.html',
+  styleUrls: ['./delete-feature-confirmation-modal.component.css'],
 })
-export class DeleteConfirmationModalComponent {
+export class DeleteFeatureConfirmationModalComponent {
   feature: IFeature;
   constructor(
-    public dialogRef: MatDialogRef<DeleteConfirmationModalComponent>,
+    public dialogRef: MatDialogRef<DeleteFeatureConfirmationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IFeature
   ) {
     this.feature = data;

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IFeatureService } from 'src/interfaces';
+import { IService } from 'src/interfaces';
 
 @Component({
   selector: 'service-card',
@@ -7,5 +7,5 @@ import { IFeatureService } from 'src/interfaces';
   styleUrls: ['./service-card.component.css'],
 })
 export class ServiceCardComponent {
-  @Input() service: IFeatureService = {} as IFeatureService;
+  @Input() service: IService = {} as IService;
 }
