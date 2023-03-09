@@ -6,7 +6,13 @@ import {
   addServiceToFeature,
   checkServiceExclusivity,
 } from 'src/database/features.controller';
-import { IFeature, IService } from 'src/interfaces';
+
+import {
+  hasValidCharactersValidator,
+  startsWithSlashValidator,
+  hasNoSpaceValidator,
+  endsWithValidCharactersValidator,
+} from '../../../validators';
 
 @Component({
   selector: 'app-new-service-modal',
@@ -14,8 +20,10 @@ import { IFeature, IService } from 'src/interfaces';
   styleUrls: ['./new-service-modal.component.css'],
 })
 export class NewServiceModalComponent {
+  endpointError: string | null = null;
+
   public newServiceForm: FormGroup = this.fb.group({
-    method: ['', [Validators.required]],
+    method: ['', [Validators.required, hasValidCharactersValidator]],
     endpoint: [
       '',
       [
@@ -23,6 +31,10 @@ export class NewServiceModalComponent {
         Validators.pattern(
           /^\/(?:[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*(?:\/:[a-zA-Z0-9_-]+)?)+(?!\/|:)$/
         ),
+        startsWithSlashValidator,
+        hasValidCharactersValidator,
+        hasNoSpaceValidator,
+        endsWithValidCharactersValidator,
       ],
     ],
     description: [''],
@@ -54,7 +66,25 @@ export class NewServiceModalComponent {
       });
     }
   }
-
+  verifyEndpoint(): void {
+    if (this.newServiceForm.get('endpoint')?.hasError('hasValidCharacters')) {
+      this.endpointError = "You can't use special characters here";
+    } else if (
+      this.newServiceForm.get('endpoint')?.hasError('startsWithSlash')
+    ) {
+      this.endpointError = "The endpoint must start with a '/'";
+    } else if (this.newServiceForm.get('endpoint')?.hasError('hasNoSpace')) {
+      this.endpointError = "you can't use space here";
+    } else if (
+      this.newServiceForm.get('endpoint')?.hasError('endsWithValidCharacters')
+    ) {
+      this.endpointError = 'The endpoint cannot end with this character';
+    } else if (this.newServiceForm.get('endpoint')?.hasError('pattern')) {
+      this.endpointError = "There's something wrong with the endpoint";
+    } else {
+      this.endpointError = null;
+    }
+  }
   cancel(): void {
     this.dialogRef.close();
   }

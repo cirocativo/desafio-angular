@@ -4,7 +4,7 @@ import { addServiceToFeature } from 'src/database/features.controller';
 import { IServiceHandler, IFeature } from 'src/interfaces';
 import { DeleteServiceConfirmationModalComponent } from '../modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
-import { NewServiceModalComponent } from '../new-service-modal/new-service-modal.component';
+import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 
 @Component({
   selector: 'service-card-list',

@@ -1,6 +1,9 @@
 <h2>New Feature</h2>
 <div mat-dialog-content>
   <form [formGroup]="newFeatureForm" (ngSubmit)="create()">
+    <small *ngIf="newFeatureForm.get('name')?.hasError('hasValidCharacters')"
+      >You can't use special characters here</small
+    >
     <mat-form-field>
       <mat-label>Name</mat-label>
       <input matInput type="text" formControlName="name" name="name" />

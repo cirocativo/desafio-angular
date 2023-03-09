@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NewServiceModalComponent } from 'src/app/new-service-modal/new-service-modal.component';
+import { NewServiceModalComponent } from 'src/app/modals/new-service-modal/new-service-modal.component';
 import { createFeature } from 'src/database/features.controller';
 import { IService } from 'src/interfaces';
+import { hasValidCharactersValidator } from '../../../validators';
 
 @Component({
   selector: 'app-new-feature-modal',
@@ -15,7 +16,7 @@ export class NewFeatureModalComponent {
   services: IService[] = [];
 
   public newFeatureForm: FormGroup = this.fbFeature.group({
-    name: ['', [Validators.required]],
+    name: ['', [Validators.required, hasValidCharactersValidator]],
     description: [''],
     services: [this.services],
   });
@@ -32,14 +33,7 @@ export class NewFeatureModalComponent {
       data: this.services,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      // if (result) {
-      //   this.services.push(result);
-      //   this.snackbar.open('Service added', undefined, {
-      //     duration: 1500,
-      //   });
-      // }
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   deleteServiceClicked(index: number): void {

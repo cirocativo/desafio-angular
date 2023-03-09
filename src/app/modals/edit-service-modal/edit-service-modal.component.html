@@ -20,6 +20,7 @@
       </mat-select>
     </mat-form-field>
 
+    <small *ngIf="endpointError">{{ endpointError }}</small>
     <mat-form-field>
       <mat-label>Endpoint</mat-label>
       <input
@@ -28,6 +29,7 @@
         formControlName="endpoint"
         name="endpoint"
         [(ngModel)]="service.endpoint"
+        (input)="verifyEndpoint()"
       />
     </mat-form-field>
 

@@ -21,7 +21,7 @@ import { ServiceCardListComponent } from './service-card-list/service-card-list.
 import { DeleteFeatureConfirmationModalComponent } from './modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { NewFeatureModalComponent } from './modals/new-feature-modal/new-feature-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NewServiceModalComponent } from './new-service-modal/new-service-modal.component';
+import { NewServiceModalComponent } from './modals/new-service-modal/new-service-modal.component';
 import { DeleteServiceConfirmationModalComponent } from './modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
 import { EditFeatureModalComponent } from './modals/edit-feature-modal/edit-feature-modal.component';
 import { EditServiceModalComponent } from './modals/edit-service-modal/edit-service-modal.component';

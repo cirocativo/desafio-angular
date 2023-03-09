@@ -4,6 +4,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { updateFeatureServiceFromIndex } from 'src/database/features.controller';
 import { IService, IServiceHandler } from 'src/interfaces';
+import {
+  hasValidCharactersValidator,
+  startsWithSlashValidator,
+  hasNoSpaceValidator,
+  endsWithValidCharactersValidator,
+} from '../../../validators';
 
 @Component({
   selector: 'app-edit-service-modal',
@@ -12,6 +18,7 @@ import { IService, IServiceHandler } from 'src/interfaces';
 })
 export class EditServiceModalComponent {
   service: IService = {} as IService;
+  endpointError: string | null = null;
 
   public updateServiceForm: FormGroup = this.fbFeature.group({
     method: ['', [Validators.required]],
@@ -22,6 +29,10 @@ export class EditServiceModalComponent {
         Validators.pattern(
           /^\/(?:[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*(?:\/:[a-zA-Z0-9_-]+)?)+(?!\/|:)$/
         ),
+        startsWithSlashValidator,
+        hasValidCharactersValidator,
+        hasNoSpaceValidator,
+        endsWithValidCharactersValidator,
       ],
     ],
     description: [''],
@@ -55,7 +66,29 @@ export class EditServiceModalComponent {
       });
     }
   }
-
+  verifyEndpoint(): void {
+    if (
+      this.updateServiceForm.get('endpoint')?.hasError('hasValidCharacters')
+    ) {
+      this.endpointError = "You can't use special characters here";
+    } else if (
+      this.updateServiceForm.get('endpoint')?.hasError('startsWithSlash')
+    ) {
+      this.endpointError = "The endpoint must start with a '/'";
+    } else if (this.updateServiceForm.get('endpoint')?.hasError('hasNoSpace')) {
+      this.endpointError = "you can't use space here";
+    } else if (
+      this.updateServiceForm
+        .get('endpoint')
+        ?.hasError('endsWithValidCharacters')
+    ) {
+      this.endpointError = 'The endpoint cannot end with this character';
+    } else if (this.updateServiceForm.get('endpoint')?.hasError('pattern')) {
+      this.endpointError = "There's something wrong with the endpoint";
+    } else {
+      this.endpointError = null;
+    }
+  }
   cancel(): void {
     this.dialogRef.close();
   }

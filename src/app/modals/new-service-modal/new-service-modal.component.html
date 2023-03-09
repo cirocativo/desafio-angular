@@ -17,9 +17,16 @@
       </mat-select>
     </mat-form-field>
 
+    <small *ngIf="endpointError">{{ endpointError }}</small>
     <mat-form-field>
       <mat-label>Endpoint</mat-label>
-      <input matInput type="text" formControlName="endpoint" name="endpoint" />
+      <input
+        matInput
+        type="text"
+        formControlName="endpoint"
+        name="endpoint"
+        (input)="verifyEndpoint()"
+      />
     </mat-form-field>
 
     <mat-form-field>
@@ -41,6 +48,7 @@
       >
         Create Service
       </button>
+
       <button mat-raised-button (click)="cancel()" type="reset">Cancel</button>
     </div>
   </form>
