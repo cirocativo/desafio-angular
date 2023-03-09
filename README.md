@@ -1,27 +1,59 @@
-# DesafioAngular
+# Angular Chalenge
+
+A responsive application made to view and manage the features and services of a backend application.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
 
-## Development server
+## Technologies
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Angular CLI 15.2.0
+- Angular Material - button, dialog, form, snackBar, etc.
+- Form Validators
+- Error handling
+- CRUD operations, working locally
+- Responsive Web Design
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### 1. Clone the repository
 
-## Build
+```
+git clone git@github.com:cirocativo/desafio-angular.git
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### 2. Installing CLI
 
-## Running unit tests
+If you don't have CLI installed, run the following command line:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
+npm install -g @angular/cli
+```
 
-## Running end-to-end tests
+### 3. Install all packages used in this project
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```
+npm install
+```
 
-## Further help
+### 4. Run the application
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```
+ng serve
+```
+
+open your browser on http://localhost:4200/ to see the application.
+
+## Features
+
+A simple interface where the user can view all Features of his application disposed in 'cards'.
+
+A Feature is composed by name, description, and Services. Each Feature can have more than one Service.
+
+A Service is composed by method, endpoint and description.
+
+For both Feature and Service, it is allowed to create, view, edit and delete.
+
+There are some actions that are not allowed by the application:
+1. Create or edit a Feature with the same name as another Feature;
+2. Create or edit a Service with the same method and endpoint used by another service;
+3. Create or edit a Service with an invalid endpoint structure;
