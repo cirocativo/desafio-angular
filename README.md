@@ -1,4 +1,4 @@
-# Angular Chalenge
+# Angular Challenge
 
 A responsive application made to view and manage the features and services of a backend application.
 
