@@ -60,6 +60,7 @@ export class EditServiceModalComponent {
         duration: 1500,
       });
       this.cancel();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       this.snackbar.open(error.message, undefined, {
         duration: 3000,

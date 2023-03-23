@@ -45,6 +45,7 @@ export class NewServiceModalComponent {
     private snackbar: MatSnackBar,
 
     public dialogRef: MatDialogRef<NewServiceModalComponent>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -60,6 +61,7 @@ export class NewServiceModalComponent {
         duration: 1500,
       });
       this.cancel();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       this.snackbar.open(error.message, undefined, {
         duration: 3000,

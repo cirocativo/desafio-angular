@@ -5,7 +5,7 @@ import { DeleteFeatureConfirmationModalComponent } from '../modals/delete-featur
 import { FeatureDetailsModalComponent } from '../modals/feature-details-modal/feature-details-modal.component';
 
 @Component({
-  selector: 'feature-card',
+  selector: 'app-feature-card',
   templateUrl: './feature-card.component.html',
   styleUrls: ['./feature-card.component.css'],
 })
@@ -19,7 +19,7 @@ export class FeatureCardComponent {
       data: this.feature,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe();
   }
 
   openDeleteConfirmationModal(): void {
@@ -30,6 +30,6 @@ export class FeatureCardComponent {
       }
     );
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe();
   }
 }

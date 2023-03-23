@@ -15,6 +15,6 @@ export class AppComponent {
   addNewFeature(): void {
     const dialogRef = this.dialog.open(NewFeatureModalComponent);
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe();
   }
 }

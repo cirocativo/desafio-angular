@@ -33,7 +33,7 @@ export class NewFeatureModalComponent {
       data: this.services,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe();
   }
 
   deleteServiceClicked(index: number): void {

@@ -2,6 +2,7 @@ import { AbstractControl } from '@angular/forms';
 
 export function startsWithSlashValidator(
   control: AbstractControl
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { [key: string]: any } | null {
   const value = control.value;
   if (value && !value.startsWith('/')) {
@@ -13,6 +14,7 @@ export function startsWithSlashValidator(
 
 export function endsWithValidCharactersValidator(
   control: AbstractControl
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { [key: string]: any } | null {
   const value = control.value;
   if (value && (value.endsWith('/') || value.endsWith(':'))) {
@@ -24,9 +26,10 @@ export function endsWithValidCharactersValidator(
 
 export function hasValidCharactersValidator(
   control: AbstractControl
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { [key: string]: any } | null {
   const value = control.value;
-  const regex = /^[a-zA-Z0-9\/ :_-]*$/g;
+  const regex = /^[a-zA-Z0-9/ :_-]*$/g;
 
   if (!regex.test(value)) {
     return { hasValidCharacters: true };
@@ -36,6 +39,7 @@ export function hasValidCharactersValidator(
 
 export function hasNoSpaceValidator(
   control: AbstractControl
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { [key: string]: any } | null {
   const value = control.value;
   if (value.indexOf(' ') !== -1) return { hasNoSpace: true };

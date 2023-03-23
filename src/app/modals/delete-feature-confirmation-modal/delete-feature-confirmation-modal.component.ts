@@ -6,7 +6,7 @@ import { deleteFeature } from 'src/database/features.controller';
 import { IFeature } from 'src/interfaces';
 
 @Component({
-  selector: 'delete-confirmation-modal',
+  selector: 'app-delete-confirmation-modal',
   templateUrl: './delete-feature-confirmation-modal.component.html',
   styleUrls: ['./delete-feature-confirmation-modal.component.css'],
 })

@@ -3,7 +3,7 @@
   <p>ID: {{ data.id }}</p>
   <p>Description: {{ data.description }}</p>
   <p><strong>Services:</strong></p>
-  <service-card-list [feature]="data"></service-card-list>
+  <app-service-card-list [feature]="data"></app-service-card-list>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button (click)="cancel()">Close</button>

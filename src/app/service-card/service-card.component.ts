@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { IService } from 'src/interfaces';
 
 @Component({
-  selector: 'service-card',
+  selector: 'app-service-card',
   templateUrl: './service-card.component.html',
   styleUrls: ['./service-card.component.css'],
 })

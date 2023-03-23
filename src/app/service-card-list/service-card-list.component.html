@@ -3,7 +3,7 @@
     *ngFor="let service of feature.services; let i = index"
     [ngClass]="'card'"
   >
-    <service-card [service]="service"></service-card>
+    <app-service-card [service]="service"></app-service-card>
     <button mat-icon-button (click)="editServiceClicked(feature, i)">
       <mat-icon>edit</mat-icon>
     </button>

@@ -1,13 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { addServiceToFeature } from 'src/database/features.controller';
-import { IServiceHandler, IFeature } from 'src/interfaces';
+import { IFeature } from 'src/interfaces';
 import { DeleteServiceConfirmationModalComponent } from '../modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 
 @Component({
-  selector: 'service-card-list',
+  selector: 'app-service-card-list',
   templateUrl: './service-card-list.component.html',
   styleUrls: ['./service-card-list.component.css'],
 })
@@ -24,16 +23,12 @@ export class ServiceCardListComponent {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe();
   }
 
   addButtonClicked() {
-    const dialogRef = this.dialog.open(NewServiceModalComponent, {
+    this.dialog.open(NewServiceModalComponent, {
       data: { feature: this.feature },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      //if (result) addServiceToFeature(this.feature, result);
     });
   }
 
@@ -48,6 +43,6 @@ export class ServiceCardListComponent {
       }
     );
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe();
   }
 }
