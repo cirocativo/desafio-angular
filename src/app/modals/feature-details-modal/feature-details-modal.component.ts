@@ -6,6 +6,7 @@ import {
 } from '@angular/material/dialog';
 
 import { IFeature } from 'src/interfaces';
+import { DeleteFeatureConfirmationModalComponent } from '../delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { EditFeatureModalComponent } from '../edit-feature-modal/edit-feature-modal.component';
 
 @Component({
@@ -27,5 +28,10 @@ export class FeatureDetailsModalComponent {
   }
   cancel(): void {
     this.dialogRef.close();
+  }
+  delete(): void {
+    this.dialog.open(DeleteFeatureConfirmationModalComponent, {
+      data: this.data,
+    });
   }
 }
