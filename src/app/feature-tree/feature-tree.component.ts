@@ -12,6 +12,7 @@ import { FeatureDetailsModalComponent } from '../modals/feature-details-modal/fe
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 import { DeleteServiceConfirmationModalComponent } from '../modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
+import { DeleteFeatureConfirmationModalComponent } from '../modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 
 interface ExampleFlatNode {
   expandable: boolean;
@@ -87,16 +88,24 @@ export class FeatureTreeComponent {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   constructor(private snackBar: MatSnackBar, public dialog: MatDialog) {
-    this.dataSource.data = TREE_DATA;
+    this.refreshFeatureList();
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
+  refreshFeatureList = () => {
+    this.dataSource.data = transformToTree(getFeatures());
+  };
+
   openFeatureDetails(node: ExampleFlatNode) {
     try {
       const feature: IFeature = getFeatureById(node.id);
-      this.dialog.open(FeatureDetailsModalComponent, {
+      const dialogRef = this.dialog.open(FeatureDetailsModalComponent, {
         data: feature,
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.refreshFeatureList();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -110,8 +119,12 @@ export class FeatureTreeComponent {
     try {
       const feature: IFeature = getFeatureById(node.id);
 
-      this.dialog.open(NewServiceModalComponent, {
+      const dialogRef = this.dialog.open(NewServiceModalComponent, {
         data: { feature: feature },
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.refreshFeatureList();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -125,11 +138,15 @@ export class FeatureTreeComponent {
     try {
       const feature: IFeature = getFeatureById(node.id);
       console.log(feature, node.index);
-      this.dialog.open(EditServiceModalComponent, {
+      const dialogRef = this.dialog.open(EditServiceModalComponent, {
         data: {
           feature: feature,
           serviceIndex: node.index,
         },
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.refreshFeatureList();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -143,11 +160,39 @@ export class FeatureTreeComponent {
     try {
       const feature: IFeature = getFeatureById(node.id);
 
-      this.dialog.open(DeleteServiceConfirmationModalComponent, {
-        data: {
-          feature: feature,
-          serviceIndex: node.index,
-        },
+      const dialogRef = this.dialog.open(
+        DeleteServiceConfirmationModalComponent,
+        {
+          data: {
+            feature: feature,
+            serviceIndex: node.index,
+          },
+        }
+      );
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.refreshFeatureList();
+      });
+    } catch (e) {
+      if (e instanceof Error)
+        this.snackBar.open(e.message, undefined, {
+          duration: 1500,
+        });
+    }
+  }
+
+  deleteFeature(node: ExampleFlatNode): void {
+    try {
+      const feature: IFeature = getFeatureById(node.id);
+      const dialogRef = this.dialog.open(
+        DeleteFeatureConfirmationModalComponent,
+        {
+          data: feature,
+        }
+      );
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.refreshFeatureList();
       });
     } catch (e) {
       if (e instanceof Error)
