@@ -25,6 +25,8 @@ import { NewServiceModalComponent } from './modals/new-service-modal/new-service
 import { DeleteServiceConfirmationModalComponent } from './modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
 import { EditFeatureModalComponent } from './modals/edit-feature-modal/edit-feature-modal.component';
 import { EditServiceModalComponent } from './modals/edit-service-modal/edit-service-modal.component';
+import { FeatureTreeComponent } from './feature-tree/feature-tree.component';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { EditServiceModalComponent } from './modals/edit-service-modal/edit-serv
     DeleteServiceConfirmationModalComponent,
     EditFeatureModalComponent,
     EditServiceModalComponent,
+    FeatureTreeComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ import { EditServiceModalComponent } from './modals/edit-service-modal/edit-serv
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatTreeModule,
     ReactiveFormsModule,
   ],
   providers: [],

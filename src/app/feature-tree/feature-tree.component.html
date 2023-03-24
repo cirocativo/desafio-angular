@@ -1,0 +1,30 @@
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree-node *matTreeNodeDef="let node" class="node" matTreeNodePadding>
+    <button mat-icon-button disabled></button>
+    <button mat-icon-button (click)="openServiceDetails(node)">
+      <mat-icon> assignment </mat-icon></button
+    ><span (click)="openServiceDetails(node)">{{ node.name }}</span>
+    <button mat-icon-button (click)="deleteService(node)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-tree-node>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <button
+      mat-icon-button
+      matTreeNodeToggle
+      [attr.aria-label]="'Toggle' + node.name"
+    >
+      <mat-icon>
+        {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
+      </mat-icon>
+    </button>
+    <button mat-icon-button (click)="openFeatureDetails(node)">
+      <mat-icon>folder</mat-icon>
+    </button>
+    <span class="node" (click)="openFeatureDetails(node)">{{ node.name }}</span>
+
+    <button mat-icon-button (click)="addService(node)">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-tree-node>
+</mat-tree>

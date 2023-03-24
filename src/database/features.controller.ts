@@ -1,10 +1,10 @@
-import { IFeature, IFeatureRequest, IService } from 'src/interfaces';
-import { features } from './features';
+import { IFeature, IService } from 'src/interfaces';
+import { features } from './features.populate';
 import { v4 as uuid } from 'uuid';
 
 const featuresBD = features;
 
-export function createFeature(feature: IFeatureRequest): void {
+export function createFeature(feature: IFeature): void {
   const id = uuid();
 
   const newFeature: IFeature = { ...feature, id: id };
@@ -16,6 +16,12 @@ export function createFeature(feature: IFeatureRequest): void {
 
 export function getFeatures(): IFeature[] {
   return featuresBD;
+}
+
+export function getFeatureById(id: string): IFeature {
+  const feature = featuresBD.find((feature) => feature.id === id);
+  if (feature) return feature;
+  throw new Error(`Could not find this feature`);
 }
 
 export function updateFeature(id: string, feature: IFeature) {

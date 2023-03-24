@@ -7,5 +7,5 @@ import { IService } from 'src/interfaces';
   styleUrls: ['./service-card.component.css'],
 })
 export class ServiceCardComponent {
-  @Input() service: IService = {} as IService;
+  @Input() service: Partial<IService> = {} as IService;
 }
