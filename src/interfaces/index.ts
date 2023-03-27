@@ -10,6 +10,11 @@ export interface IFeature extends IResource {
   services: Partial<IService>[];
 }
 
+export interface IFeatureUpdate {
+  name?: string;
+  description?: string;
+}
+
 export interface IResource {
   id: string;
 }

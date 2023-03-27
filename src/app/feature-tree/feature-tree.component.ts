@@ -8,11 +8,11 @@ import {
 } from '@angular/material/tree';
 import { getFeatureById, getFeatures } from 'src/database/features.controller';
 import { IFeature } from 'src/interfaces';
-import { FeatureDetailsModalComponent } from '../modals/feature-details-modal/feature-details-modal.component';
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 import { DeleteServiceConfirmationModalComponent } from '../modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
 import { DeleteFeatureConfirmationModalComponent } from '../modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
+import { EditFeatureModalComponent } from '../modals/edit-feature-modal/edit-feature-modal.component';
 
 interface ExampleFlatNode {
   expandable: boolean;
@@ -29,8 +29,6 @@ interface FeatureNode {
   index: number;
   children?: FeatureNode[];
 }
-
-const TREE_DATA: FeatureNode[] = transformToTree(getFeatures());
 
 function transformToTree(features: IFeature[]): FeatureNode[] {
   const transformedData: FeatureNode[] = [];
@@ -100,7 +98,7 @@ export class FeatureTreeComponent {
   openFeatureDetails(node: ExampleFlatNode) {
     try {
       const feature: IFeature = getFeatureById(node.id);
-      const dialogRef = this.dialog.open(FeatureDetailsModalComponent, {
+      const dialogRef = this.dialog.open(EditFeatureModalComponent, {
         data: feature,
       });
 

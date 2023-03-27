@@ -1,19 +1,29 @@
-<h2>Edit Feature</h2>
 <div mat-dialog-content>
-  <form [formGroup]="updateFeatureForm" (ngSubmit)="update()">
+  <form [formGroup]="updateFeatureForm">
     <small *ngIf="updateFeatureForm.get('name')?.hasError('hasValidCharacters')"
       >You can't use special characters here</small
     >
-    <mat-form-field>
-      <mat-label>Name</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="name"
-        name="name"
-        [(ngModel)]="feature.name"
-      />
-    </mat-form-field>
+    <h2 *ngIf="!hasClickedOnTitle; else matFormTitle" (click)="editTitle()">
+      {{ feature.name }}
+    </h2>
+    <ng-template #matFormTitle>
+      <mat-form-field
+        *ngIf="hasClickedOnTitle"
+        (blur)="updateTitle()"
+        class="input-title"
+        appearance="outline"
+      >
+        <input
+          matInput
+          type="text"
+          formControlName="name"
+          name="name"
+          [(ngModel)]="feature.name"
+          (blur)="updateTitle()"
+        />
+      </mat-form-field>
+    </ng-template>
+
     <mat-form-field>
       <mat-label>Description</mat-label>
       <input
@@ -22,6 +32,7 @@
         formControlName="description"
         name="description"
         [(ngModel)]="feature.description"
+        (blur)="updateDescription()"
       />
     </mat-form-field>
 

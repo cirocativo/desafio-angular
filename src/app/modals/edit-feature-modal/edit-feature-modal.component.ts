@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { updateFeature } from 'src/database/features.controller';
-import { IFeature } from 'src/interfaces';
+import { IFeature, IFeatureUpdate } from 'src/interfaces';
 import { hasValidCharactersValidator } from 'src/validators';
 
 @Component({
@@ -13,6 +13,7 @@ import { hasValidCharactersValidator } from 'src/validators';
 })
 export class EditFeatureModalComponent {
   feature: IFeature = {} as IFeature;
+  hasClickedOnTitle = false;
 
   public updateFeatureForm: FormGroup = this.fbFeature.group({
     name: ['', [Validators.required, hasValidCharactersValidator]],
@@ -28,17 +29,44 @@ export class EditFeatureModalComponent {
     Object.assign(this.feature, data);
   }
 
-  update() {
+  editTitle() {
+    this.hasClickedOnTitle = true;
+  }
+  updateTitle() {
     try {
-      updateFeature(this.data.id, this.updateFeatureForm.value);
+      const name = this.updateFeatureForm.get('name')?.value;
+      this.update({ name });
+      this.hasClickedOnTitle = false;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  updateDescription() {
+    try {
+      const description = this.updateFeatureForm.get('description')?.value;
+      this.update({ description });
+      //this.hasClickedOnTitle = false;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  update(data: IFeatureUpdate) {
+    try {
+      const feature_id: string = this.data.id;
+
+      updateFeature(feature_id, data);
+
       this.snackbar.open('Feature updated successfully!', undefined, {
         duration: 1500,
       });
-      this.cancel();
+      //this.cancel();
     } catch (error) {
-      this.snackbar.open('This feature name already exists', undefined, {
-        duration: 3000,
-      });
+      if (error instanceof Error) {
+        this.snackbar.open(error.message, undefined, {
+          duration: 3000,
+        });
+      }
     }
   }
 

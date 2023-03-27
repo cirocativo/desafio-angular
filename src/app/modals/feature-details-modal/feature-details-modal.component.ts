@@ -15,11 +15,14 @@ import { EditFeatureModalComponent } from '../edit-feature-modal/edit-feature-mo
   styleUrls: ['./feature-details-modal.component.css'],
 })
 export class FeatureDetailsModalComponent {
+  marimbas: IFeature = {} as IFeature;
   constructor(
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<FeatureDetailsModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IFeature
-  ) {}
+  ) {
+    this.marimbas = data;
+  }
 
   edit(): void {
     this.dialog.open(EditFeatureModalComponent, {

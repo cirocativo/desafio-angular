@@ -1,11 +1,18 @@
 form {
   display: flex;
   flex-direction: column;
+  max-width: 500px;
+  width: 50vw;
 }
 
-h2 {
-  margin-left: 24px;
-}
 small {
   color: red;
+}
+
+.input-title,
+.input-title div {
+  font-weight: bold;
+  font-size: 20px;
+
+  border-color: white;
 }

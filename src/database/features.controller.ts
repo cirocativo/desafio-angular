@@ -1,4 +1,4 @@
-import { IFeature, IService } from 'src/interfaces';
+import { IFeature, IFeatureUpdate, IService } from 'src/interfaces';
 import { features } from './features.populate';
 import { v4 as uuid } from 'uuid';
 
@@ -24,14 +24,18 @@ export function getFeatureById(id: string): IFeature {
   throw new Error(`Could not find this feature`);
 }
 
-export function updateFeature(id: string, feature: IFeature) {
+export function updateFeature(id: string, feature: IFeatureUpdate) {
   const featureToUpdateIndex = featuresBD.findIndex((f) => f.id === id);
 
   if (feature.name != featuresBD[featureToUpdateIndex].name)
     checkFeatureExclusivity(feature);
 
-  featuresBD[featureToUpdateIndex].description = feature.description;
-  featuresBD[featureToUpdateIndex].name = feature.name;
+  if (feature.description) {
+    featuresBD[featureToUpdateIndex].description = feature.description;
+  }
+  if (feature.name) {
+    featuresBD[featureToUpdateIndex].name = feature.name;
+  }
 }
 
 export function deleteFeature(feature: IFeature): void {
@@ -76,13 +80,15 @@ export function deleteFeatureServiceFromIndex(
   featuresBD[featureIndex].services.splice(serviceIndex, 1);
 }
 
-function checkFeatureExclusivity(feature: IFeature) {
-  const featureNameAlreadyExists = featuresBD.find(
-    (f) => f.name === feature.name
-  );
+function checkFeatureExclusivity(feature: IFeature | IFeatureUpdate) {
+  if (feature.name) {
+    const featureNameAlreadyExists = featuresBD.find(
+      (f) => f.name === feature.name
+    );
 
-  if (featureNameAlreadyExists)
-    throw new Error('This feature name already exists');
+    if (featureNameAlreadyExists)
+      throw new Error('This feature name already exists');
+  }
 }
 
 export function checkServiceExclusivity(service: IService) {
