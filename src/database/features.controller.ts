@@ -25,12 +25,15 @@ export function getFeatureById(id: string): IFeature {
 }
 
 export function updateFeature(id: string, feature: IFeatureUpdate) {
+  console.log(feature);
+  console.log(feature.name);
+  console.log(feature.description);
   const featureToUpdateIndex = featuresBD.findIndex((f) => f.id === id);
 
   if (feature.name != featuresBD[featureToUpdateIndex].name)
     checkFeatureExclusivity(feature);
 
-  if (feature.description) {
+  if (feature.description != undefined) {
     featuresBD[featureToUpdateIndex].description = feature.description;
   }
   if (feature.name) {

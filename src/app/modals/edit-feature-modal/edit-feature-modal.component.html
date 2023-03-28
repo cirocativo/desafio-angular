@@ -9,7 +9,6 @@
     <ng-template #matFormTitle>
       <mat-form-field
         *ngIf="hasClickedOnTitle"
-        (blur)="updateTitle()"
         class="input-title"
         appearance="outline"
       >
@@ -27,33 +26,34 @@
     <span><strong>Description:</strong></span>
 
     <mat-form-field
-      [ngClass]="feature.description !== '' ? 'input-description' : ''"
+      [ngClass]="feature.description ? 'input-description' : ''"
+      class="clickable-input"
       appearance="outline"
       *ngIf="!hasClickedOnDescription; else matFormDescription"
       (click)="editDescription()"
     >
-      <input
+      <textarea
         matInput
+        class="clickable-input"
         type="text"
         value="{{ feature.description || 'Add a more detailed description' }}"
         disabled="true"
-      />
+      ></textarea>
     </mat-form-field>
     <ng-template #matFormDescription>
       <mat-form-field
         *ngIf="hasClickedOnDescription"
-        (blur)="updateDescription()"
         class="input-description"
         appearance="outline"
       >
-        <input
+        <textarea
           matInput
           type="text"
           formControlName="description"
           name="description"
           [(ngModel)]="feature.description"
           (blur)="updateDescription()"
-        />
+        ></textarea>
       </mat-form-field>
     </ng-template>
 
