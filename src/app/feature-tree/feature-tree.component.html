@@ -2,7 +2,9 @@
   <mat-tree-node *matTreeNodeDef="let node" class="node" matTreeNodePadding>
     <button mat-icon-button disabled></button>
     <button mat-icon-button (click)="openServiceDetails(node)">
-      <mat-icon> assignment </mat-icon></button
+      <mat-icon [ngClass]="node.method + 'Service'">
+        assignment
+      </mat-icon></button
     ><span (click)="openServiceDetails(node)">{{ node.name }}</span>
     <button mat-icon-button (click)="deleteService(node)">
       <mat-icon>delete</mat-icon>

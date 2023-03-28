@@ -1,3 +1,26 @@
 .node:hover {
   cursor: pointer;
 }
+
+.getService {
+  color: purple;
+}
+
+.postService {
+  color: green;
+}
+
+.patchService {
+  color: yellow;
+}
+
+.putService {
+  color: orange;
+}
+
+.deleteService {
+  color: red;
+}
+.marimbas {
+  color: blue;
+}

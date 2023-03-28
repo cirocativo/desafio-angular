@@ -21,12 +21,14 @@ interface ExampleFlatNode {
   description: string;
   id: string;
   index: number;
+  method: string;
 }
 interface FeatureNode {
   name: string;
   description: string;
   id: string;
   index: number;
+  method: string;
   children?: FeatureNode[];
 }
 
@@ -45,6 +47,7 @@ function transformToTree(features: IFeature[]): FeatureNode[] {
       serviceNode.description = service.description || '';
       serviceNode.id = feature.id;
       serviceNode.index = index;
+      serviceNode.method = service.method?.toLowerCase() || '';
       services.push(serviceNode);
     });
     featureNode.children = services;
@@ -68,6 +71,7 @@ export class FeatureTreeComponent {
       description: node.description,
       id: node.id,
       index: node.index,
+      method: node.method,
     };
   };
 

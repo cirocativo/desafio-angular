@@ -58,20 +58,25 @@ export function addServiceToFeature(feature: IFeature, service: IService) {
 export function updateFeatureServiceFromIndex(
   feature: IFeature,
   serviceIndex: number,
-  service: IService
+  service: Partial<IService>
 ) {
   const featureIndex = featuresBD.findIndex((f) => feature.id === f.id);
 
   const oldService = featuresBD[featureIndex].services[serviceIndex];
 
+  const newService: Partial<IService> = {
+    method: service.method || oldService.method,
+    endpoint: service.endpoint || oldService.endpoint,
+    description: service.description || oldService.description,
+  };
   if (
-    service.method != oldService.method ||
-    service.endpoint != oldService.endpoint
+    newService.method != oldService.method ||
+    newService.endpoint != oldService.endpoint
   ) {
-    checkServiceExclusivity(service);
+    checkServiceExclusivity(newService);
   }
 
-  featuresBD[featureIndex].services[serviceIndex] = service;
+  featuresBD[featureIndex].services[serviceIndex] = newService;
 }
 
 export function deleteFeatureServiceFromIndex(
@@ -94,7 +99,7 @@ function checkFeatureExclusivity(feature: IFeature | IFeatureUpdate) {
   }
 }
 
-export function checkServiceExclusivity(service: IService) {
+export function checkServiceExclusivity(service: Partial<IService>) {
   const repeatedService = featuresBD.some((feature) =>
     feature.services.some(
       (s) => s.method === service.method && s.endpoint === service.endpoint

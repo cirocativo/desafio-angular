@@ -1,6 +1,7 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { updateFeatureServiceFromIndex } from 'src/database/features.controller';
 import { IService, IServiceHandler } from 'src/interfaces';
@@ -19,6 +20,14 @@ import {
 export class EditServiceModalComponent {
   service: IService = {} as IService;
   endpointError: string | null = null;
+  hasClickedOnEndpoint = false;
+  hasClickedOnDescription = false;
+
+  @ViewChild('endpointInput', { static: false })
+  endpointInput: ElementRef<HTMLInputElement>;
+
+  @ViewChild('descriptionTextarea', { static: false })
+  descriptionTextarea: ElementRef<HTMLTextAreaElement>;
 
   public updateServiceForm: FormGroup = this.fbFeature.group({
     method: ['', [Validators.required]],
@@ -42,13 +51,76 @@ export class EditServiceModalComponent {
     private fbFeature: FormBuilder,
     private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<EditServiceModalComponent>,
+    private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: IServiceHandler
   ) {
     const sourceService = data.feature.services[data.serviceIndex];
 
     Object.assign(this.service, sourceService);
+
+    this.endpointInput =
+      this.elementRef.nativeElement.querySelector('#endpointInput');
+
+    this.descriptionTextarea = this.elementRef.nativeElement.querySelector(
+      '#descriptionTextarea'
+    );
   }
 
+  editMethod() {
+    console.log('chegamos aqui, meu filho');
+    this.update();
+  }
+  editEndpoint() {
+    this.hasClickedOnEndpoint = true;
+    setTimeout(() => {
+      this.endpointInput.nativeElement.focus();
+    });
+  }
+  updateEndpoint() {
+    if (
+      this.updateServiceForm.get('endpoint')?.getError('repeatedEndpoint') ||
+      this.updateServiceForm.get('method')?.getError('repeatedEndpoint')
+    ) {
+      this.updateServiceForm.get('endpoint')?.setErrors(null);
+      this.updateServiceForm.get('method')?.setErrors(null);
+      this.endpointError = null;
+    }
+    try {
+      if (!this.updateServiceForm.get('endpoint')?.errors) {
+        this.update();
+        if (!this.endpointError) {
+          this.hasClickedOnEndpoint = false;
+        }
+      } else {
+        console.log('pegamos no erro');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        this.updateServiceForm
+          .get('endpoint')
+          ?.setErrors({ repeatedEndpoint: true });
+        this.updateServiceForm
+          .get('method')
+          ?.setErrors({ repeatedEndpoint: true });
+        this.endpointError = error.message;
+      }
+    }
+  }
+
+  editDescription() {
+    this.hasClickedOnDescription = true;
+    setTimeout(() => {
+      this.descriptionTextarea.nativeElement.focus();
+    });
+  }
+  updateDescription() {
+    try {
+      this.update();
+      this.hasClickedOnDescription = false;
+    } catch (e) {
+      console.error(e);
+    }
+  }
   update() {
     try {
       updateFeatureServiceFromIndex(
@@ -59,12 +131,16 @@ export class EditServiceModalComponent {
       this.snackbar.open('Service updated successfully!', undefined, {
         duration: 1500,
       });
-      this.cancel();
+      this.updateServiceForm.get('endpoint')?.setErrors(null);
+      this.updateServiceForm.get('method')?.setErrors(null);
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       this.snackbar.open(error.message, undefined, {
         duration: 3000,
       });
+
+      throw new Error(error.message);
     }
   }
   verifyEndpoint(): void {

@@ -15,6 +15,11 @@ export interface IFeatureUpdate {
   description?: string;
 }
 
+export interface IServiceUpdate {
+  endpoint?: string;
+  description?: string;
+  method?: string;
+}
 export interface IResource {
   id: string;
 }

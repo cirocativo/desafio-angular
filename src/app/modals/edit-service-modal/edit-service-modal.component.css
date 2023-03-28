@@ -12,3 +12,14 @@ h2 {
 small {
   color: red;
 }
+
+.clickable-input:hover {
+  cursor: pointer;
+}
+
+/* .method-mat-form {
+  width: 100px;
+}
+.method-mat-form mat-select {
+  font-size: 12px;
+} */
