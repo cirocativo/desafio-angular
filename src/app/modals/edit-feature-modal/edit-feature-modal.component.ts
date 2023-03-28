@@ -1,4 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,6 +23,12 @@ export class EditFeatureModalComponent {
   hasClickedOnTitle = false;
   hasClickedOnDescription = false;
 
+  @ViewChild('descriptionTextarea', { static: false })
+  descriptionTextarea: ElementRef<HTMLTextAreaElement>;
+
+  @ViewChild('titleInput', { static: false })
+  titleInput: ElementRef<HTMLInputElement>;
+
   public updateFeatureForm: FormGroup = this.fbFeature.group({
     name: ['', [Validators.required, hasValidCharactersValidator]],
     description: [''],
@@ -25,20 +38,29 @@ export class EditFeatureModalComponent {
     private fbFeature: FormBuilder,
     private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<EditFeatureModalComponent>,
+    private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: IFeature
   ) {
     Object.assign(this.feature, data);
+    this.descriptionTextarea = this.elementRef.nativeElement.querySelector(
+      '#descriptionTextarea'
+    );
+    this.titleInput =
+      this.elementRef.nativeElement.querySelector('#titleInput');
   }
 
   editTitle() {
     this.hasClickedOnTitle = true;
+    setTimeout(() => {
+      this.titleInput.nativeElement.focus();
+    });
   }
   updateTitle() {
     try {
       if (!this.updateFeatureForm.get('name')?.errors) {
         const name = this.updateFeatureForm.get('name')?.value;
         this.update({ name });
-        this.hasClickedOnTitle = false; 
+        this.hasClickedOnTitle = false;
       }
     } catch (e) {
       console.error(e);
@@ -47,6 +69,9 @@ export class EditFeatureModalComponent {
 
   editDescription() {
     this.hasClickedOnDescription = true;
+    setTimeout(() => {
+      this.descriptionTextarea.nativeElement.focus();
+    });
   }
   updateDescription() {
     try {
