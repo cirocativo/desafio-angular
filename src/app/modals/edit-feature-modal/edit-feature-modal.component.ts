@@ -14,6 +14,7 @@ import { hasValidCharactersValidator } from 'src/validators';
 export class EditFeatureModalComponent {
   feature: IFeature = {} as IFeature;
   hasClickedOnTitle = false;
+  hasClickedOnDescription = false;
 
   public updateFeatureForm: FormGroup = this.fbFeature.group({
     name: ['', [Validators.required, hasValidCharactersValidator]],
@@ -34,18 +35,24 @@ export class EditFeatureModalComponent {
   }
   updateTitle() {
     try {
-      const name = this.updateFeatureForm.get('name')?.value;
-      this.update({ name });
-      this.hasClickedOnTitle = false;
+      if (!this.updateFeatureForm.get('name')?.errors) {
+        const name = this.updateFeatureForm.get('name')?.value;
+        this.update({ name });
+        this.hasClickedOnTitle = false; 
+      }
     } catch (e) {
       console.error(e);
     }
+  }
+
+  editDescription() {
+    this.hasClickedOnDescription = true;
   }
   updateDescription() {
     try {
       const description = this.updateFeatureForm.get('description')?.value;
       this.update({ description });
-      //this.hasClickedOnTitle = false;
+      this.hasClickedOnDescription = false;
     } catch (e) {
       console.error(e);
     }

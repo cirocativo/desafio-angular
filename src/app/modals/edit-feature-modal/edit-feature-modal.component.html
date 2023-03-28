@@ -24,27 +24,40 @@
       </mat-form-field>
     </ng-template>
 
-    <mat-form-field>
-      <mat-label>Description</mat-label>
+    <span><strong>Description:</strong></span>
+
+    <mat-form-field
+      [ngClass]="feature.description !== '' ? 'input-description' : ''"
+      appearance="outline"
+      *ngIf="!hasClickedOnDescription; else matFormDescription"
+      (click)="editDescription()"
+    >
       <input
         matInput
         type="text"
-        formControlName="description"
-        name="description"
-        [(ngModel)]="feature.description"
-        (blur)="updateDescription()"
+        value="{{ feature.description || 'Add a more detailed description' }}"
+        disabled="true"
       />
     </mat-form-field>
+    <ng-template #matFormDescription>
+      <mat-form-field
+        *ngIf="hasClickedOnDescription"
+        (blur)="updateDescription()"
+        class="input-description"
+        appearance="outline"
+      >
+        <input
+          matInput
+          type="text"
+          formControlName="description"
+          name="description"
+          [(ngModel)]="feature.description"
+          (blur)="updateDescription()"
+        />
+      </mat-form-field>
+    </ng-template>
 
     <div mat-dialog-actions>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!updateFeatureForm.valid"
-      >
-        Update Feature
-      </button>
       <button mat-raised-button (click)="cancel()" type="reset">Close</button>
     </div>
   </form>
