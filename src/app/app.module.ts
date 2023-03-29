@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FeatureCardComponent } from './feature-card/feature-card.component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,10 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FeatureCardListComponent } from './feature-card-list/feature-card-list.component';
-import { FeatureDetailsModalComponent } from './modals/feature-details-modal/feature-details-modal.component';
-import { ServiceCardComponent } from './service-card/service-card.component';
-import { ServiceCardListComponent } from './service-card-list/service-card-list.component';
 import { DeleteFeatureConfirmationModalComponent } from './modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { NewFeatureModalComponent } from './modals/new-feature-modal/new-feature-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,11 +26,6 @@ import { MatTreeModule } from '@angular/material/tree';
 @NgModule({
   declarations: [
     AppComponent,
-    FeatureCardComponent,
-    FeatureCardListComponent,
-    FeatureDetailsModalComponent,
-    ServiceCardComponent,
-    ServiceCardListComponent,
     DeleteFeatureConfirmationModalComponent,
     NewFeatureModalComponent,
     NewServiceModalComponent,
