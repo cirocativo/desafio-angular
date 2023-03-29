@@ -1,7 +1,12 @@
-import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { updateFeatureServiceFromIndex } from 'src/database/features.controller';
 import { IService, IServiceHandler } from 'src/interfaces';
@@ -17,7 +22,7 @@ import {
   templateUrl: './edit-service-modal.component.html',
   styleUrls: ['./edit-service-modal.component.css'],
 })
-export class EditServiceModalComponent {
+export class EditServiceModalComponent implements AfterViewInit {
   service: IService = {} as IService;
   endpointError: string | null = null;
   hasClickedOnEndpoint = false;
@@ -66,10 +71,12 @@ export class EditServiceModalComponent {
     );
   }
 
-  editMethod() {
-    console.log('chegamos aqui, meu filho');
-    this.update();
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.updateServiceForm.get('endpoint')?.setErrors(null);
+    });
   }
+
   editEndpoint() {
     this.hasClickedOnEndpoint = true;
     setTimeout(() => {
@@ -92,7 +99,10 @@ export class EditServiceModalComponent {
           this.hasClickedOnEndpoint = false;
         }
       } else {
-        console.log('pegamos no erro');
+        console.log(
+          'pegamos no erro',
+          this.updateServiceForm.get('endpoint')?.errors
+        );
       }
     } catch (error) {
       if (error instanceof Error) {
