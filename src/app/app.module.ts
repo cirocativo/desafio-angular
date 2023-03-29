@@ -22,6 +22,7 @@ import { EditFeatureModalComponent } from './modals/edit-feature-modal/edit-feat
 import { EditServiceModalComponent } from './modals/edit-service-modal/edit-service-modal.component';
 import { FeatureTreeComponent } from './feature-tree/feature-tree.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { SearchBoxComponent } from './search-box/search-box.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { MatTreeModule } from '@angular/material/tree';
     EditFeatureModalComponent,
     EditServiceModalComponent,
     FeatureTreeComponent,
+    SearchBoxComponent,
   ],
   imports: [
     BrowserModule,

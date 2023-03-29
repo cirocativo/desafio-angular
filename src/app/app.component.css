@@ -6,6 +6,16 @@ h1 {
   text-align: center;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+app-search-box {
+  margin-right: 2rem;
+}
+
 button {
   margin-left: 40px;
   margin-bottom: 20px;

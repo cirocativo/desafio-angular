@@ -9,6 +9,7 @@ import { NewFeatureModalComponent } from './modals/new-feature-modal/new-feature
 })
 export class AppComponent {
   title = 'desafio-angular';
+  searchText = '';
 
   constructor(public dialog: MatDialog) {}
 
@@ -16,5 +17,10 @@ export class AppComponent {
     const dialogRef = this.dialog.open(NewFeatureModalComponent);
 
     dialogRef.afterClosed().subscribe();
+  }
+
+  onSearchTextEntered(searchValue: string): void {
+    this.searchText = searchValue;
+    console.log(this.searchText);
   }
 }

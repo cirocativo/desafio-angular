@@ -32,37 +32,13 @@ interface FeatureNode {
   children?: FeatureNode[];
 }
 
-function transformToTree(features: IFeature[]): FeatureNode[] {
-  const transformedData: FeatureNode[] = [];
-
-  features.forEach((feature) => {
-    const featureNode = {} as FeatureNode;
-    featureNode.name = feature.name;
-    featureNode.description = feature.description;
-    featureNode.id = feature.id;
-    const services: FeatureNode[] = [];
-    feature.services.forEach((service, index) => {
-      const serviceNode = {} as FeatureNode;
-      serviceNode.name = service.method + ' ' + service.endpoint;
-      serviceNode.description = service.description || '';
-      serviceNode.id = feature.id;
-      serviceNode.index = index;
-      serviceNode.method = service.method?.toLowerCase() || '';
-      services.push(serviceNode);
-    });
-    featureNode.children = services;
-    transformedData.push(featureNode);
-  });
-
-  return transformedData;
-}
-
 @Component({
   selector: 'app-feature-tree',
   templateUrl: './feature-tree.component.html',
   styleUrls: ['./feature-tree.component.css'],
 })
 export class FeatureTreeComponent {
+  searchText = '';
   private _transformer = (node: FeatureNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -96,7 +72,7 @@ export class FeatureTreeComponent {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   refreshFeatureList = () => {
-    this.dataSource.data = transformToTree(getFeatures());
+    this.dataSource.data = this.transformToTree(getFeatures());
   };
 
   openFeatureDetails(node: ExampleFlatNode) {
@@ -202,5 +178,30 @@ export class FeatureTreeComponent {
           duration: 1500,
         });
     }
+  }
+
+  private transformToTree(features: IFeature[]): FeatureNode[] {
+    const transformedData: FeatureNode[] = [];
+
+    features.forEach((feature) => {
+      const featureNode = {} as FeatureNode;
+      featureNode.name = feature.name;
+      featureNode.description = feature.description;
+      featureNode.id = feature.id;
+      const services: FeatureNode[] = [];
+      feature.services.forEach((service, index) => {
+        const serviceNode = {} as FeatureNode;
+        serviceNode.name = service.method + ' ' + service.endpoint;
+        serviceNode.description = service.description || '';
+        serviceNode.id = feature.id;
+        serviceNode.index = index;
+        serviceNode.method = service.method?.toLowerCase() || '';
+        services.push(serviceNode);
+      });
+      featureNode.children = services;
+      transformedData.push(featureNode);
+    });
+
+    return transformedData;
   }
 }
