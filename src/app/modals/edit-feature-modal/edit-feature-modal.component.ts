@@ -2,7 +2,7 @@ import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { updateFeature } from 'src/database/features.controller';
+import { FeaturesService } from 'src/app/services/features.service';
 import { IFeature, IFeatureUpdate } from 'src/interfaces';
 import { hasValidCharactersValidator } from 'src/validators';
 
@@ -30,6 +30,7 @@ export class EditFeatureModalComponent {
   constructor(
     private fbFeature: FormBuilder,
     private snackbar: MatSnackBar,
+    private featuresService: FeaturesService,
     public dialogRef: MatDialogRef<EditFeatureModalComponent>,
     private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: IFeature
@@ -80,7 +81,7 @@ export class EditFeatureModalComponent {
     try {
       const feature_id: string = this.data.id;
 
-      updateFeature(feature_id, data);
+      this.featuresService.updateFeature(feature_id, data);
 
       this.snackbar.open('Feature updated successfully!', undefined, {
         duration: 1500,

@@ -1,49 +1,21 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { IFeature } from 'src/interfaces';
-import { FeatureTreeComponent } from './feature-tree/feature-tree.component';
-import { NewFeatureModalComponent } from './modals/new-feature-modal/new-feature-modal.component';
-import { FeaturesService } from './services/features.service';
+import { Component } from '@angular/core';
+import { FeatureNode, IFeature } from 'src/interfaces';
+import { FeaturesService } from '../services/features.service';
 
-interface FeatureNode {
-  name: string;
-  description: string;
-  id: string;
-  index: number;
-  method: string;
-  children?: FeatureNode[];
-}
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css'],
 })
-export class AppComponent {
+export class HeaderComponent {
   data: FeatureNode[] = [];
   searchText = '';
 
-  @ViewChild(FeatureTreeComponent) featureTreeComponent!: FeatureTreeComponent;
-
-  constructor(
-    public dialog: MatDialog,
-    private featuresService: FeaturesService
-  ) {
-    setTimeout(() => {
-      this.refreshData();
-    });
-  }
+  constructor(private featuresService: FeaturesService) {}
 
   onSearchTextChanged(text: string) {
     this.searchText = text;
     this.refreshData();
-  }
-
-  addNewFeature(): void {
-    const dialogRef = this.dialog.open(NewFeatureModalComponent);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.refreshData();
-    });
   }
 
   refreshData(): void {
@@ -57,7 +29,7 @@ export class AppComponent {
 
     this.data = this.transformToTree(features);
 
-    this.featureTreeComponent.dataSource.data = this.data;
+    // this.featureTreeComponent.dataSource.data = this.data;
   }
   transformToTree(features: IFeature[]): FeatureNode[] {
     const transformedData: FeatureNode[] = [];

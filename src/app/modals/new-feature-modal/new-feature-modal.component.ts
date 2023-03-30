@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewServiceModalComponent } from 'src/app/modals/new-service-modal/new-service-modal.component';
-import { createFeature } from 'src/database/features.controller';
+import { FeaturesService } from 'src/app/services/features.service';
 import { IService } from 'src/interfaces';
 import { hasValidCharactersValidator } from '../../../validators';
 
@@ -23,6 +23,7 @@ export class NewFeatureModalComponent {
 
   constructor(
     private fbFeature: FormBuilder,
+    private featuresService: FeaturesService,
     public dialogRef: MatDialogRef<NewFeatureModalComponent>,
     public dialog: MatDialog,
     private snackbar: MatSnackBar
@@ -51,7 +52,7 @@ export class NewFeatureModalComponent {
     } else {
       this.newFeatureForm.value.services = this.services;
       try {
-        createFeature(this.newFeatureForm.value);
+        this.featuresService.createFeature(this.newFeatureForm.value);
 
         this.snackbar.open('Feature created successfully!', undefined, {
           duration: 1500,

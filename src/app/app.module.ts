@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DeleteFeatureConfirmationModalComponent } from './modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
@@ -23,6 +24,7 @@ import { EditServiceModalComponent } from './modals/edit-service-modal/edit-serv
 import { FeatureTreeComponent } from './feature-tree/feature-tree.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { SearchBoxComponent } from './search-box/search-box.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { SearchBoxComponent } from './search-box/search-box.component';
     EditServiceModalComponent,
     FeatureTreeComponent,
     SearchBoxComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,6 +50,7 @@ import { SearchBoxComponent } from './search-box/search-box.component';
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatToolbarModule,
     MatTreeModule,
     ReactiveFormsModule,
   ],

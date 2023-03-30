@@ -6,13 +6,13 @@ import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
 } from '@angular/material/tree';
-import { getFeatureById } from 'src/database/features.controller';
 import { IFeature } from 'src/interfaces';
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 import { DeleteServiceConfirmationModalComponent } from '../modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
 import { DeleteFeatureConfirmationModalComponent } from '../modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { EditFeatureModalComponent } from '../modals/edit-feature-modal/edit-feature-modal.component';
+import { FeaturesService } from '../services/features.service';
 
 interface ExampleFlatNode {
   expandable: boolean;
@@ -72,7 +72,11 @@ export class FeatureTreeComponent {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-  constructor(private snackBar: MatSnackBar, public dialog: MatDialog) {
+  constructor(
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog,
+    private featuresService: FeaturesService
+  ) {
     this.dataSource.data = this.data;
   }
 
@@ -80,7 +84,7 @@ export class FeatureTreeComponent {
 
   openFeatureDetails(node: ExampleFlatNode) {
     try {
-      const feature: IFeature = getFeatureById(node.id);
+      const feature: IFeature = this.featuresService.getFeatureById(node.id);
       const dialogRef = this.dialog.open(EditFeatureModalComponent, {
         data: feature,
       });
@@ -98,7 +102,7 @@ export class FeatureTreeComponent {
 
   addService(node: ExampleFlatNode) {
     try {
-      const feature: IFeature = getFeatureById(node.id);
+      const feature: IFeature = this.featuresService.getFeatureById(node.id);
 
       const dialogRef = this.dialog.open(NewServiceModalComponent, {
         data: { feature: feature },
@@ -117,7 +121,7 @@ export class FeatureTreeComponent {
 
   openServiceDetails(node: ExampleFlatNode) {
     try {
-      const feature: IFeature = getFeatureById(node.id);
+      const feature: IFeature = this.featuresService.getFeatureById(node.id);
       console.log(feature, node.index);
       const dialogRef = this.dialog.open(EditServiceModalComponent, {
         data: {
@@ -139,7 +143,7 @@ export class FeatureTreeComponent {
 
   deleteService(node: ExampleFlatNode) {
     try {
-      const feature: IFeature = getFeatureById(node.id);
+      const feature: IFeature = this.featuresService.getFeatureById(node.id);
 
       const dialogRef = this.dialog.open(
         DeleteServiceConfirmationModalComponent,
@@ -164,7 +168,7 @@ export class FeatureTreeComponent {
 
   deleteFeature(node: ExampleFlatNode): void {
     try {
-      const feature: IFeature = getFeatureById(node.id);
+      const feature: IFeature = this.featuresService.getFeatureById(node.id);
       const dialogRef = this.dialog.open(
         DeleteFeatureConfirmationModalComponent,
         {
