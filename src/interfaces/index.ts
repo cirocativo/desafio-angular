@@ -1,16 +1,26 @@
-export interface IService {
+export interface IService extends IResource {
   method: string;
   endpoint: string;
   description: string;
 }
 
-export interface IFeatureRequest {
+export interface IFeature extends IResource {
   name: string;
   description: string;
-  services: IService[];
+  services: Partial<IService>[];
 }
 
-export interface IFeature extends IFeatureRequest {
+export interface IFeatureUpdate {
+  name?: string;
+  description?: string;
+}
+
+export interface IServiceUpdate {
+  endpoint?: string;
+  description?: string;
+  method?: string;
+}
+export interface IResource {
   id: string;
 }
 

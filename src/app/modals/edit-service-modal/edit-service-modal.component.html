@@ -1,59 +1,90 @@
-<h2>Edit Service</h2>
+<h2>Service</h2>
 <div mat-dialog-content>
-  <form [formGroup]="updateServiceForm" (ngSubmit)="update()">
-    <mat-form-field>
-      <mat-label>Method</mat-label>
-      <mat-select
-        formControlName="method"
-        name="method"
-        [(ngModel)]="service.method"
-      >
-        <mat-option value="GET">GET</mat-option>
-        <mat-option value="POST">POST</mat-option>
-        <mat-option value="PATCH">PATCH</mat-option>
-        <mat-option value="PUT">PUT</mat-option>
-        <mat-option value="DELETE">DELETE</mat-option>
-        <mat-option value="HEAD">HEAD</mat-option>
-        <mat-option value="CONNECT">CONNECT</mat-option>
-        <mat-option value="OPTIONS">OPTIONS</mat-option>
-        <mat-option value="TRACE">TRACE</mat-option>
-      </mat-select>
-    </mat-form-field>
-
+  <form [formGroup]="updateServiceForm">
     <small *ngIf="endpointError">{{ endpointError }}</small>
-    <mat-form-field>
-      <mat-label>Endpoint</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="endpoint"
-        name="endpoint"
-        [(ngModel)]="service.endpoint"
-        (input)="verifyEndpoint()"
-      />
-    </mat-form-field>
+    <div class="endpoint-container">
+      <mat-form-field class="method-mat-form">
+        <mat-select
+          formControlName="method"
+          name="method"
+          [(ngModel)]="service.method"
+          #methodSelect
+          (selectionChange)="updateEndpoint()"
+        >
+          <mat-option value="GET">GET</mat-option>
+          <mat-option value="POST">POST</mat-option>
+          <mat-option value="PATCH">PATCH</mat-option>
+          <mat-option value="PUT">PUT</mat-option>
+          <mat-option value="DELETE">DELETE</mat-option>
+          <mat-option value="HEAD">HEAD</mat-option>
+          <mat-option value="CONNECT">CONNECT</mat-option>
+          <mat-option value="OPTIONS">OPTIONS</mat-option>
+          <mat-option value="TRACE">TRACE</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div
+        *ngIf="!hasClickedOnEndpoint; else matFormEndpoint"
+        (click)="editEndpoint()"
+        class="clickable-input endpoint-p-container font-black"
+      >
+        <p>
+          {{ service.endpoint }}
+        </p>
+      </div>
 
-    <mat-form-field>
-      <mat-label>Description</mat-label>
-      <input
+      <ng-template #matFormEndpoint>
+        <mat-form-field class="mat-form-field-endpoint" appearance="fill">
+          <input
+            matInput
+            type="text"
+            formControlName="endpoint"
+            name="endpoint"
+            [(ngModel)]="service.endpoint"
+            (input)="verifyEndpoint()"
+            (blur)="updateEndpoint()"
+            #endpointInput
+          />
+        </mat-form-field>
+      </ng-template>
+    </div>
+
+    <span><strong>Description:</strong></span>
+
+    <mat-form-field
+      [ngClass]="service.description ? 'input-description' : ''"
+      class="clickable-input"
+      appearance="outline"
+      *ngIf="!hasClickedOnDescription; else matFormDescription"
+      (click)="editDescription()"
+    >
+      <textarea
         matInput
+        class="clickable-input"
         type="text"
-        formControlName="description"
-        name="description"
-        [(ngModel)]="service.description"
-      />
+        value="{{ service.description || 'Add a more detailed description' }}"
+        disabled="true"
+      ></textarea>
     </mat-form-field>
+    <ng-template #matFormDescription>
+      <mat-form-field
+        *ngIf="hasClickedOnDescription"
+        class="input-description"
+        appearance="outline"
+      >
+        <textarea
+          matInput
+          type="text"
+          formControlName="description"
+          name="description"
+          [(ngModel)]="service.description"
+          (blur)="updateDescription()"
+          #descriptionTextarea
+        ></textarea>
+      </mat-form-field>
+    </ng-template>
 
     <div mat-dialog-actions>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!updateServiceForm.valid"
-      >
-        Update Feature
-      </button>
-      <button mat-raised-button (click)="cancel()" type="reset">Close</button>
+      <button mat-raised-button (click)="cancel()" type="button">Close</button>
     </div>
   </form>
 </div>

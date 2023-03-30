@@ -1,9 +1,0 @@
-nav {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: space-around;
-}
-
-.service {
-  color: rgba(0, 0, 0, 0.65);
-}

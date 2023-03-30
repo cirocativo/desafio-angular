@@ -12,7 +12,7 @@ import { IServiceHandler, IFeature, IService } from 'src/interfaces';
 export class DeleteServiceConfirmationModalComponent {
   serviceIndex: number;
   feature: IFeature;
-  service: IService;
+  service: Partial<IService>;
   constructor(
     private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<DeleteServiceConfirmationModalComponent>,

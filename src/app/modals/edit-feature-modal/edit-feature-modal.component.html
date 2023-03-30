@@ -1,39 +1,65 @@
-<h2>Edit Feature</h2>
 <div mat-dialog-content>
-  <form [formGroup]="updateFeatureForm" (ngSubmit)="update()">
+  <form [formGroup]="updateFeatureForm">
     <small *ngIf="updateFeatureForm.get('name')?.hasError('hasValidCharacters')"
       >You can't use special characters here</small
     >
-    <mat-form-field>
-      <mat-label>Name</mat-label>
-      <input
+    <h2 *ngIf="!hasClickedOnTitle; else matFormTitle" (click)="editTitle()">
+      {{ feature.name }}
+    </h2>
+    <ng-template #matFormTitle>
+      <mat-form-field
+        *ngIf="hasClickedOnTitle"
+        class="input-title"
+        appearance="outline"
+      >
+        <input
+          matInput
+          type="text"
+          formControlName="name"
+          name="name"
+          [(ngModel)]="feature.name"
+          (blur)="updateTitle()"
+          #titleInput
+        />
+      </mat-form-field>
+    </ng-template>
+
+    <span><strong>Description:</strong></span>
+
+    <mat-form-field
+      [ngClass]="feature.description ? 'input-description' : ''"
+      class="clickable-input"
+      appearance="outline"
+      *ngIf="!hasClickedOnDescription; else matFormDescription"
+      (click)="editDescription()"
+    >
+      <textarea
         matInput
+        class="clickable-input"
         type="text"
-        formControlName="name"
-        name="name"
-        [(ngModel)]="feature.name"
-      />
+        value="{{ feature.description || 'Add a more detailed description' }}"
+        disabled="true"
+      ></textarea>
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Description</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="description"
-        name="description"
-        [(ngModel)]="feature.description"
-      />
-    </mat-form-field>
+    <ng-template #matFormDescription>
+      <mat-form-field
+        *ngIf="hasClickedOnDescription"
+        class="input-description"
+        appearance="outline"
+      >
+        <textarea
+          matInput
+          type="text"
+          formControlName="description"
+          name="description"
+          [(ngModel)]="feature.description"
+          (blur)="updateDescription()"
+          #descriptionTextarea
+        ></textarea>
+      </mat-form-field>
+    </ng-template>
 
     <div mat-dialog-actions>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!updateFeatureForm.valid"
-      >
-        Update Feature
-      </button>
       <button mat-raised-button (click)="cancel()" type="reset">Close</button>
     </div>
   </form>

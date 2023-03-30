@@ -1,0 +1,13 @@
+<form class="">
+  <mat-form-field class="">
+    <mat-icon matSuffix>search</mat-icon>
+    <input
+      type="text"
+      matInput
+      placeholder="Search"
+      name="search"
+      [(ngModel)]="enteredSearchValue"
+      (input)="onSearchTextChanged()"
+    />
+  </mat-form-field>
+</form>

@@ -1,0 +1,27 @@
+mat-tree {
+  padding: 3rem 1rem;
+}
+
+.node:hover {
+  cursor: pointer;
+}
+
+.getService {
+  color: purple;
+}
+
+.postService {
+  color: green;
+}
+
+.patchService {
+  color: yellow;
+}
+
+.putService {
+  color: orange;
+}
+
+.deleteService {
+  color: red;
+}

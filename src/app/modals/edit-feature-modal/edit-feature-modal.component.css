@@ -1,11 +1,28 @@
 form {
   display: flex;
   flex-direction: column;
+  max-width: 500px;
+  width: 50vw;
 }
-
 h2 {
-  margin-left: 24px;
+  color: black;
 }
 small {
   color: red;
+}
+
+.input-title,
+.input-title div {
+  font-weight: bold;
+  font-size: 20px;
+
+  border-color: white;
+}
+
+.input-description textarea {
+  color: black;
+}
+
+.clickable-input:hover {
+  cursor: pointer;
 }

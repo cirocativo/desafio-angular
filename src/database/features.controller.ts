@@ -1,10 +1,10 @@
-import { IFeature, IFeatureRequest, IService } from 'src/interfaces';
-import { features } from './features';
+import { IFeature, IFeatureUpdate, IService } from 'src/interfaces';
+import { features } from './features.populate';
 import { v4 as uuid } from 'uuid';
 
 const featuresBD = features;
 
-export function createFeature(feature: IFeatureRequest): void {
+export function createFeature(feature: IFeature): void {
   const id = uuid();
 
   const newFeature: IFeature = { ...feature, id: id };
@@ -18,14 +18,27 @@ export function getFeatures(): IFeature[] {
   return featuresBD;
 }
 
-export function updateFeature(id: string, feature: IFeature) {
+export function getFeatureById(id: string): IFeature {
+  const feature = featuresBD.find((feature) => feature.id === id);
+  if (feature) return feature;
+  throw new Error(`Could not find this feature`);
+}
+
+export function updateFeature(id: string, feature: IFeatureUpdate) {
+  console.log(feature);
+  console.log(feature.name);
+  console.log(feature.description);
   const featureToUpdateIndex = featuresBD.findIndex((f) => f.id === id);
 
   if (feature.name != featuresBD[featureToUpdateIndex].name)
     checkFeatureExclusivity(feature);
 
-  featuresBD[featureToUpdateIndex].description = feature.description;
-  featuresBD[featureToUpdateIndex].name = feature.name;
+  if (feature.description != undefined) {
+    featuresBD[featureToUpdateIndex].description = feature.description;
+  }
+  if (feature.name) {
+    featuresBD[featureToUpdateIndex].name = feature.name;
+  }
 }
 
 export function deleteFeature(feature: IFeature): void {
@@ -45,20 +58,25 @@ export function addServiceToFeature(feature: IFeature, service: IService) {
 export function updateFeatureServiceFromIndex(
   feature: IFeature,
   serviceIndex: number,
-  service: IService
+  service: Partial<IService>
 ) {
   const featureIndex = featuresBD.findIndex((f) => feature.id === f.id);
 
   const oldService = featuresBD[featureIndex].services[serviceIndex];
 
+  const newService: Partial<IService> = {
+    method: service.method || oldService.method,
+    endpoint: service.endpoint || oldService.endpoint,
+    description: service.description || oldService.description,
+  };
   if (
-    service.method != oldService.method ||
-    service.endpoint != oldService.endpoint
+    newService.method != oldService.method ||
+    newService.endpoint != oldService.endpoint
   ) {
-    checkServiceExclusivity(service);
+    checkServiceExclusivity(newService);
   }
 
-  featuresBD[featureIndex].services[serviceIndex] = service;
+  featuresBD[featureIndex].services[serviceIndex] = newService;
 }
 
 export function deleteFeatureServiceFromIndex(
@@ -70,16 +88,18 @@ export function deleteFeatureServiceFromIndex(
   featuresBD[featureIndex].services.splice(serviceIndex, 1);
 }
 
-function checkFeatureExclusivity(feature: IFeature) {
-  const featureNameAlreadyExists = featuresBD.find(
-    (f) => f.name === feature.name
-  );
+function checkFeatureExclusivity(feature: IFeature | IFeatureUpdate) {
+  if (feature.name) {
+    const featureNameAlreadyExists = featuresBD.find(
+      (f) => f.name === feature.name
+    );
 
-  if (featureNameAlreadyExists)
-    throw new Error('This feature name already exists');
+    if (featureNameAlreadyExists)
+      throw new Error('This feature name already exists');
+  }
 }
 
-export function checkServiceExclusivity(service: IService) {
+export function checkServiceExclusivity(service: Partial<IService>) {
   const repeatedService = featuresBD.some((feature) =>
     feature.services.some(
       (s) => s.method === service.method && s.endpoint === service.endpoint

@@ -1,7 +1,10 @@
 <h1>My Features</h1>
 <div>
+  <div class="header">
   <button mat-raised-button color="primary" (click)="addNewFeature()">
     Add new Feature
   </button>
+  <app-search-box (searchTextChanged)="onSearchTextChanged($event)"></app-search-box>
+  </div>
+  <app-feature-tree [data]="data" (treeChanged)="refreshData()" />
 </div>
-<app-feature-card-list></app-feature-card-list>

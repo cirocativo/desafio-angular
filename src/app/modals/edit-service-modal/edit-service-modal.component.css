@@ -1,6 +1,9 @@
 form {
   display: flex;
   flex-direction: column;
+
+  max-width: 500px;
+  width: 50vw;
 }
 
 h2 {
@@ -8,4 +11,57 @@ h2 {
 }
 small {
   color: red;
+}
+
+.endpoint-container {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .endpoint-container {
+    flex-wrap: nowrap;
+  }
+}
+
+.font-black {
+  color: black;
+}
+
+.endpoint-p-container {
+  display: flex;
+  align-items: center;
+}
+
+.endpoint-p-container {
+  height: 57px;
+  padding-left: 1rem;
+}
+
+.clickable-input,
+.mat-form-field-endpoint {
+  font-size: 14px;
+  width: 100%;
+}
+.mat-form-field-endpoint {
+  width: 100%;
+}
+
+.clickable-input:hover {
+  cursor: pointer;
+}
+.method-mat-form {
+  width: 120px;
+}
+
+mat-option {
+  font-size: 12px;
+}
+.method-mat-form mat-select {
+  font-size: 12px;
+}
+.input-description textarea {
+  color: black;
+  font-size: 14px;
 }

@@ -1,9 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { updateFeature } from 'src/database/features.controller';
-import { IFeature } from 'src/interfaces';
+import { IFeature, IFeatureUpdate } from 'src/interfaces';
 import { hasValidCharactersValidator } from 'src/validators';
 
 @Component({
@@ -13,6 +13,14 @@ import { hasValidCharactersValidator } from 'src/validators';
 })
 export class EditFeatureModalComponent {
   feature: IFeature = {} as IFeature;
+  hasClickedOnTitle = false;
+  hasClickedOnDescription = false;
+
+  @ViewChild('descriptionTextarea', { static: false })
+  descriptionTextarea: ElementRef<HTMLTextAreaElement>;
+
+  @ViewChild('titleInput', { static: false })
+  titleInput: ElementRef<HTMLInputElement>;
 
   public updateFeatureForm: FormGroup = this.fbFeature.group({
     name: ['', [Validators.required, hasValidCharactersValidator]],
@@ -23,22 +31,67 @@ export class EditFeatureModalComponent {
     private fbFeature: FormBuilder,
     private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<EditFeatureModalComponent>,
+    private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: IFeature
   ) {
     Object.assign(this.feature, data);
+    this.descriptionTextarea = this.elementRef.nativeElement.querySelector(
+      '#descriptionTextarea'
+    );
+    this.titleInput =
+      this.elementRef.nativeElement.querySelector('#titleInput');
   }
 
-  update() {
+  editTitle() {
+    this.hasClickedOnTitle = true;
+    setTimeout(() => {
+      this.titleInput.nativeElement.focus();
+    });
+  }
+  updateTitle() {
     try {
-      updateFeature(this.data.id, this.updateFeatureForm.value);
+      if (!this.updateFeatureForm.get('name')?.errors) {
+        const name = this.updateFeatureForm.get('name')?.value;
+        this.update({ name });
+        this.hasClickedOnTitle = false;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  editDescription() {
+    this.hasClickedOnDescription = true;
+    setTimeout(() => {
+      this.descriptionTextarea.nativeElement.focus();
+    });
+  }
+  updateDescription() {
+    try {
+      const description = this.updateFeatureForm.get('description')?.value;
+      this.update({ description });
+      this.hasClickedOnDescription = false;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  update(data: IFeatureUpdate) {
+    try {
+      const feature_id: string = this.data.id;
+
+      updateFeature(feature_id, data);
+
       this.snackbar.open('Feature updated successfully!', undefined, {
         duration: 1500,
       });
-      this.cancel();
+      //this.cancel();
     } catch (error) {
-      this.snackbar.open('This feature name already exists', undefined, {
-        duration: 3000,
-      });
+      if (error instanceof Error) {
+        this.snackbar.open(error.message, undefined, {
+          duration: 3000,
+        });
+      }
     }
   }
 
