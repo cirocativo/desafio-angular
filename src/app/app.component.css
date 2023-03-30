@@ -8,12 +8,13 @@ h1 {
 
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
 
 app-search-box {
-  margin-right: 2rem;
+  margin: 0 2rem;
 }
 
 button {

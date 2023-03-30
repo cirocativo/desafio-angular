@@ -16,6 +16,13 @@ small {
 .endpoint-container {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .endpoint-container {
+    flex-wrap: nowrap;
+  }
 }
 
 .font-black {
