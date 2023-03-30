@@ -12,7 +12,6 @@ export class SearchBoxComponent {
   searchTextChanged: EventEmitter<string> = new EventEmitter<string>();
 
   onSearchTextChanged() {
-    console.log(this.enteredSearchValue);
     this.searchTextChanged.emit(this.enteredSearchValue);
   }
 }

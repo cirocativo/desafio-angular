@@ -4,8 +4,7 @@
   <button mat-raised-button color="primary" (click)="addNewFeature()">
     Add new Feature
   </button>
-  <app-search-box (searchTextChanged)="onSearchTextEntered"></app-search-box>
+  <app-search-box (searchTextChanged)="onSearchTextChanged($event)"></app-search-box>
   </div>
-  <app-feature-tree/>
+  <app-feature-tree [data]="data" (treeChanged)="refreshData()" />
 </div>
-

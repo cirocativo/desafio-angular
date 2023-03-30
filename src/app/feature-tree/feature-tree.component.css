@@ -1,3 +1,7 @@
+mat-tree {
+  padding: 3rem 1rem;
+}
+
 .node:hover {
   cursor: pointer;
 }

@@ -1,12 +1,12 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
 } from '@angular/material/tree';
-import { getFeatureById, getFeatures } from 'src/database/features.controller';
+import { getFeatureById } from 'src/database/features.controller';
 import { IFeature } from 'src/interfaces';
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
@@ -38,7 +38,14 @@ interface FeatureNode {
   styleUrls: ['./feature-tree.component.css'],
 })
 export class FeatureTreeComponent {
-  searchText = '';
+  @Input() data: FeatureNode[] = [];
+
+  @Output() treeChanged: EventEmitter<FeatureNode[]> = new EventEmitter();
+
+  onTreeChanged() {
+    this.treeChanged.emit();
+  }
+
   private _transformer = (node: FeatureNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -66,14 +73,10 @@ export class FeatureTreeComponent {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   constructor(private snackBar: MatSnackBar, public dialog: MatDialog) {
-    this.refreshFeatureList();
+    this.dataSource.data = this.data;
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
-
-  refreshFeatureList = () => {
-    this.dataSource.data = this.transformToTree(getFeatures());
-  };
 
   openFeatureDetails(node: ExampleFlatNode) {
     try {
@@ -83,7 +86,7 @@ export class FeatureTreeComponent {
       });
 
       dialogRef.afterClosed().subscribe(() => {
-        this.refreshFeatureList();
+        this.onTreeChanged();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -102,7 +105,7 @@ export class FeatureTreeComponent {
       });
 
       dialogRef.afterClosed().subscribe(() => {
-        this.refreshFeatureList();
+        this.onTreeChanged();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -124,7 +127,7 @@ export class FeatureTreeComponent {
       });
 
       dialogRef.afterClosed().subscribe(() => {
-        this.refreshFeatureList();
+        this.onTreeChanged();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -149,7 +152,7 @@ export class FeatureTreeComponent {
       );
 
       dialogRef.afterClosed().subscribe(() => {
-        this.refreshFeatureList();
+        this.onTreeChanged();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -170,7 +173,7 @@ export class FeatureTreeComponent {
       );
 
       dialogRef.afterClosed().subscribe(() => {
-        this.refreshFeatureList();
+        this.onTreeChanged();
       });
     } catch (e) {
       if (e instanceof Error)
@@ -178,30 +181,5 @@ export class FeatureTreeComponent {
           duration: 1500,
         });
     }
-  }
-
-  private transformToTree(features: IFeature[]): FeatureNode[] {
-    const transformedData: FeatureNode[] = [];
-
-    features.forEach((feature) => {
-      const featureNode = {} as FeatureNode;
-      featureNode.name = feature.name;
-      featureNode.description = feature.description;
-      featureNode.id = feature.id;
-      const services: FeatureNode[] = [];
-      feature.services.forEach((service, index) => {
-        const serviceNode = {} as FeatureNode;
-        serviceNode.name = service.method + ' ' + service.endpoint;
-        serviceNode.description = service.description || '';
-        serviceNode.id = feature.id;
-        serviceNode.index = index;
-        serviceNode.method = service.method?.toLowerCase() || '';
-        services.push(serviceNode);
-      });
-      featureNode.children = services;
-      transformedData.push(featureNode);
-    });
-
-    return transformedData;
   }
 }
