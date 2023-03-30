@@ -7,7 +7,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Technologies
 
 - Angular CLI 15.2.0
-- Angular Material - button, dialog, form, snackBar, etc.
+- Angular Material - dialog, form, tree, snackBar, etc.
 - Form Validators
 - Error handling
 - CRUD operations, working locally
@@ -45,7 +45,7 @@ open your browser on http://localhost:4200/ to see the application.
 
 ## Features
 
-A simple interface where the user can view all Features of his application disposed in 'cards'.
+A simple interface where the user can view all Features of his application disposed in a tree.
 
 A Feature is composed by name, description, and Services. Each Feature can have more than one Service.
 
