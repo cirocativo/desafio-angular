@@ -4,6 +4,7 @@ import { IFeature } from 'src/interfaces';
 import { FeatureTreeComponent } from './feature-tree/feature-tree.component';
 import { NewFeatureModalComponent } from './modals/new-feature-modal/new-feature-modal.component';
 import { FeaturesService } from './services/features.service';
+import { SideNavComponent } from './side-nav/side-nav.component';
 
 interface FeatureNode {
   name: string;
@@ -21,8 +22,10 @@ interface FeatureNode {
 export class AppComponent {
   data: FeatureNode[] = [];
   searchText = '';
+  addButtonTooltip = 'Add Feature';
 
   @ViewChild(FeatureTreeComponent) featureTreeComponent!: FeatureTreeComponent;
+  @ViewChild(SideNavComponent) sideNavComponent!: SideNavComponent;
 
   constructor(
     public dialog: MatDialog,
@@ -37,7 +40,6 @@ export class AppComponent {
     this.searchText = text;
     this.refreshData();
   }
-
   addNewFeature(): void {
     const dialogRef = this.dialog.open(NewFeatureModalComponent);
 

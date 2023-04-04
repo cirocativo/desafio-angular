@@ -3,19 +3,8 @@
 html,
 body {
   height: 100%;
-  background-color: rgb(240, 250, 255);
 }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.card {
-  width: 30%;
-  min-width: 15rem;
-  max-width: 17rem;
-  padding: 0.5rem;
-  box-shadow: 3px 3px 10px #000;
-  background-color: #fff;
-  border-radius: 4px;
 }

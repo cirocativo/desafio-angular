@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FeatureNode, IFeature } from 'src/interfaces';
 import { FeaturesService } from '../services/features.service';
 
@@ -11,7 +11,14 @@ export class HeaderComponent {
   data: FeatureNode[] = [];
   searchText = '';
 
+  @Output()
+  menuClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   constructor(private featuresService: FeaturesService) {}
+
+  onMenuClicked() {
+    this.menuClicked.emit(true);
+  }
 
   onSearchTextChanged(text: string) {
     this.searchText = text;

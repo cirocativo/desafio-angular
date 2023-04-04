@@ -1,0 +1,15 @@
+.sidenave-container {
+  background-color: #fff;
+}
+.list {
+  margin: 1rem 0;
+}
+
+.item-inner-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.item-inner-container span {
+  margin-left: 1rem;
+}

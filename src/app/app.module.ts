@@ -12,7 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DeleteFeatureConfirmationModalComponent } from './modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { NewFeatureModalComponent } from './modals/new-feature-modal/new-feature-modal.component';
@@ -25,6 +26,9 @@ import { FeatureTreeComponent } from './feature-tree/feature-tree.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { HeaderComponent } from './header/header.component';
+import { SideNavComponent } from './side-nav/side-nav.component';
+
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -38,6 +42,7 @@ import { HeaderComponent } from './header/header.component';
     FeatureTreeComponent,
     SearchBoxComponent,
     HeaderComponent,
+    SideNavComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,11 +53,14 @@ import { HeaderComponent } from './header/header.component';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatListModule,
     MatSelectModule,
+    MatSidenavModule,
     MatSnackBarModule,
     MatToolbarModule,
     MatTreeModule,
     ReactiveFormsModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
