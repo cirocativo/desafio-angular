@@ -1,10 +1,25 @@
-<h1>My Features</h1>
-<div>
-  <div class="header">
-  <button mat-raised-button color="primary" (click)="addNewFeature()">
-    Add new Feature
+<app-header (menuClicked)="sideNavComponent.sidenav.toggle()">
+  <h1>Features</h1>
+
+  <app-search-box
+    (searchTextChanged)="onSearchTextChanged($event)"
+  ></app-search-box>
+  <span class="header-spacer"></span>
+
+  <button
+    mat-icon-button
+    class="add-button"
+    matTooltip="Add New Feature"
+    (click)="addNewFeature()"
+  >
+    <mat-icon>add</mat-icon>
   </button>
-  <app-search-box (searchTextChanged)="onSearchTextChanged($event)"></app-search-box>
+</app-header>
+<app-side-nav>
+  <div class="main-container">
+    <app-feature-tree
+      [data]="data"
+      (treeChanged)="refreshData()"
+    ></app-feature-tree>
   </div>
-  <app-feature-tree [data]="data" (treeChanged)="refreshData()" />
-</div>
+</app-side-nav>

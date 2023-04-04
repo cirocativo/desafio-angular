@@ -8,7 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { updateFeatureServiceFromIndex } from 'src/database/features.controller';
+import { FeaturesService } from 'src/app/services/features.service';
 import { IService, IServiceHandler } from 'src/interfaces';
 import {
   hasValidCharactersValidator,
@@ -55,6 +55,7 @@ export class EditServiceModalComponent implements AfterViewInit {
   constructor(
     private fbFeature: FormBuilder,
     private snackbar: MatSnackBar,
+    private featuresService: FeaturesService,
     public dialogRef: MatDialogRef<EditServiceModalComponent>,
     private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: IServiceHandler
@@ -133,7 +134,7 @@ export class EditServiceModalComponent implements AfterViewInit {
   }
   update() {
     try {
-      updateFeatureServiceFromIndex(
+      this.featuresService.updateFeatureServiceFromIndex(
         this.data.feature,
         this.data.serviceIndex,
         this.updateServiceForm.value

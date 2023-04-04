@@ -1,0 +1,15 @@
+<mat-sidenav-container class="sidenav-container" (backdropClick)="close()">
+  <mat-sidenav #sidenav mode="push">
+    <mat-nav-list class="list">
+      <mat-list-item class="item" (click)="close()">
+        <div class="item-inner-container">
+          <mat-icon mat-list-icon> folder </mat-icon> <span>Features</span>
+        </div>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <ng-content> </ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

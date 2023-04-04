@@ -23,8 +23,16 @@ export interface IServiceUpdate {
 export interface IResource {
   id: string;
 }
-
 export interface IServiceHandler {
   feature: IFeature;
   serviceIndex: number;
+}
+
+export interface FeatureNode {
+  name: string;
+  description: string;
+  id: string;
+  index: number;
+  method: string;
+  children?: FeatureNode[];
 }
