@@ -1,9 +1,22 @@
 <mat-sidenav-container class="sidenav-container" (backdropClick)="close()">
-  <mat-sidenav #sidenav mode="push">
+  <mat-sidenav #sidenav mode="side">
     <mat-nav-list class="list">
-      <mat-list-item class="item" (click)="close()">
+      <mat-list-item class="item" routerLink="">
+        <div class="item-inner-container">
+          <mat-icon mat-list-icon> home </mat-icon> <span>Home</span>
+        </div>
+      </mat-list-item>
+      <mat-list-item class="item" routerLink="/features">
         <div class="item-inner-container">
           <mat-icon mat-list-icon> folder </mat-icon> <span>Features</span>
+        </div>
+      </mat-list-item>
+      <mat-list-item class="item" (click)="loginClicked()">
+        <div class="item-inner-container">
+          <mat-icon mat-list-icon>
+            {{ isLoggedIn ? "logout" : "person" }}
+          </mat-icon>
+          <span>{{ isLoggedIn ? "Logout" : "Login" }}</span>
         </div>
       </mat-list-item>
     </mat-nav-list>

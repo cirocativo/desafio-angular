@@ -36,3 +36,14 @@ export interface FeatureNode {
   method: string;
   children?: FeatureNode[];
 }
+
+export interface IAuthGuestResponse {
+  accessToken: string;
+  features: string[];
+}
+
+export interface ILoginRequest {
+  email: string;
+  password: string;
+  type?: string;
+}

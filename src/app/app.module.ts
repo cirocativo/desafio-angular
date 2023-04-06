@@ -29,6 +29,12 @@ import { HeaderComponent } from './header/header.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AppRoutingModule } from './app-routing.module';
+import { FeatureLayoutComponent } from './layouts/feature-layout/feature-layout.component';
+import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
+
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -43,11 +49,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     SearchBoxComponent,
     HeaderComponent,
     SideNavComponent,
+    FeatureLayoutComponent,
+    LoginLayoutComponent,
+    HomeLayoutComponent,
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    HttpClientModule,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
