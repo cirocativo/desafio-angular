@@ -23,7 +23,6 @@ export class FeatureLayoutComponent {
     public dialog: MatDialog,
     private featuresService: FeaturesService
   ) {
-    console.log('te liga');
     setTimeout(() => {
       this.refreshData();
     });

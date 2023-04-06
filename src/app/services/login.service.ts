@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { ILoginRequest } from 'src/interfaces';
+import { ILoginRequest, ILoginResponse } from 'src/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -14,31 +14,38 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  async login(user: ILoginRequest): Promise<boolean> {
-    try {
-      const result: any = await this.http
-        .post(`${environment.api}/token/login`, user, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + localStorage.getItem('token_guest'),
-          },
-        })
-        .toPromise();
+  login(user: ILoginRequest): Observable<ILoginResponse> {
+    return this.http
+      .post<ILoginResponse>(`${environment.api}/token/login`, user, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token_guest'),
+        },
+      })
+      .pipe(catchError(this.handleError));
+  }
 
-      if (result && result.accessToken) {
-        localStorage.setItem('token_user', result.accessToken);
-        this.isLoggedInSubject.next(true);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log(error);
-      }
-      return false;
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Something bad happened; please try again later.';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `An error occurred: ${error.error.message}`;
+    } else if (error.status === 403 || error.status === 404) {
+      errorMessage = 'Invalid email or password';
+    } else if (error.status === 0) {
+      errorMessage =
+        'Could not connect to server. Please check your internet connection.';
+    } else {
+      console.log(
+        `Backend returned code ${error.status}, body was:`,
+        error.error
+      );
+      console.log(error);
     }
+    return throwError(() => new Error(errorMessage));
+  }
+
+  changeLoggedInSubject(bool: boolean) {
+    this.isLoggedInSubject.next(bool);
   }
 
   logout() {

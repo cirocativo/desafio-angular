@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+
 import { LoginService } from 'src/app/services/login.service';
 import { SideNavComponent } from 'src/app/side-nav/side-nav.component';
 import { ILoginRequest } from 'src/interfaces';
@@ -12,8 +13,6 @@ import { ILoginRequest } from 'src/interfaces';
   styleUrls: ['./login-layout.component.css'],
 })
 export class LoginLayoutComponent {
-  submitted = false;
-
   @ViewChild(SideNavComponent) sideNavComponent!: SideNavComponent;
 
   constructor(
@@ -40,39 +39,27 @@ export class LoginLayoutComponent {
     password: this.passwordFormControl,
   });
 
-  onSubmit = async () => {
-    console.log(this.loginForm.value);
-    try {
-      if (this.loginForm.valid) {
-        const response = await this.loginService.login(
-          this.loginForm.value as ILoginRequest
-        );
-
-        if (response) {
+  onSubmit = () => {
+    if (this.loginForm.valid) {
+      this.loginService.login(this.loginForm.value as ILoginRequest).subscribe({
+        next: (res) => {
           this.router.navigate(['']);
           this.snackBar.open('You are logged in!', undefined, {
             duration: 3000,
           });
-        } else {
-          this.snackBar.open('Wrong email or password', undefined, {
+          localStorage.setItem('token_user', res.accessToken);
+          this.loginService.changeLoggedInSubject(true);
+        },
+        error: (error) => {
+          this.snackBar.open(error, undefined, {
             duration: 3000,
           });
-        }
-      } else {
-        this.snackBar.open(
-          'Please enter a valid email and password',
-          undefined,
-          {
-            duration: 3000,
-          }
-        );
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        this.snackBar.open(error.message, undefined, {
-          duration: 3000,
-        });
-      }
+        },
+      });
+    } else {
+      this.snackBar.open('Please enter a valid email and password', undefined, {
+        duration: 3000,
+      });
     }
   };
 }

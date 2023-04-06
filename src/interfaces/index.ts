@@ -47,3 +47,7 @@ export interface ILoginRequest {
   password: string;
   type?: string;
 }
+
+export interface ILoginResponse extends IAuthGuestResponse {
+  userId: string;
+}
