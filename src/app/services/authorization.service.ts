@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { IAuthGuestResponse } from 'src/interfaces';
 
@@ -9,18 +10,10 @@ import { IAuthGuestResponse } from 'src/interfaces';
 export class AuthorizationService {
   constructor(private http: HttpClient) {}
 
-  async authGuest() {
-    const result: IAuthGuestResponse | undefined = await this.http
-      .post<IAuthGuestResponse | undefined>(
-        `${environment.api}/token/guest`,
-        environment.guest
-      )
-      .toPromise();
-    if (result && result.accessToken) {
-      console.log(result);
-      localStorage.setItem('token_guest', result.accessToken);
-      return true;
-    }
-    return false;
+  authGuest(): Observable<IAuthGuestResponse> {
+    return this.http.post<IAuthGuestResponse>(
+      `${environment.api}/token/guest`,
+      environment.guest
+    );
   }
 }

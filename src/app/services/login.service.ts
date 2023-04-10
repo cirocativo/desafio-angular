@@ -22,10 +22,10 @@ export class LoginService {
           Authorization: 'Bearer ' + localStorage.getItem('token_guest'),
         },
       })
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleLoginError));
   }
 
-  private handleError(error: HttpErrorResponse) {
+  private handleLoginError(error: HttpErrorResponse) {
     let errorMessage = 'Something bad happened; please try again later.';
     if (error.error instanceof ErrorEvent) {
       errorMessage = `An error occurred: ${error.error.message}`;
@@ -53,26 +53,33 @@ export class LoginService {
     this.isLoggedInSubject.next(false);
   }
 
-  async testToken(): Promise<boolean> {
-    try {
-      const result: any = await this.http
-        .get(`${environment.api}/me`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token_user')}`,
-          },
-        })
-        .toPromise();
+  testToken(): Observable<object> {
+    return this.http
+      .get(`${environment.api}/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token_user')}`,
+        },
+      })
+      .pipe(catchError(this.handleTestError));
+  }
 
-      if (result && result.allowed) {
-        this.isLoggedInSubject.next(true);
-        return true;
-      } else {
-        this.isLoggedInSubject.next(false);
-        return false;
-      }
-    } catch (error) {
+  private handleTestError(error: HttpErrorResponse) {
+    let errorMessage =
+      'Something bad happened; try to refresh the page, or log in again.';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `An error occurred: ${error.error.message}`;
+    } else if (error.status === 403) {
+      errorMessage = 'Token not recognized. Please log in again';
+    } else if (error.status === 0) {
+      errorMessage =
+        'Could not connect to server. Please check your internet connection.';
+    } else {
+      console.log(
+        `Backend returned code ${error.status}, body was:`,
+        error.error
+      );
       console.log(error);
-      return false;
     }
+    return throwError(() => new Error(errorMessage));
   }
 }

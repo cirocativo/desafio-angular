@@ -43,12 +43,12 @@ export class LoginLayoutComponent {
     if (this.loginForm.valid) {
       this.loginService.login(this.loginForm.value as ILoginRequest).subscribe({
         next: (res) => {
-          this.router.navigate(['']);
           this.snackBar.open('You are logged in!', undefined, {
             duration: 3000,
           });
           localStorage.setItem('token_user', res.accessToken);
           this.loginService.changeLoggedInSubject(true);
+          this.router.navigate(['']);
         },
         error: (error) => {
           this.snackBar.open(error, undefined, {

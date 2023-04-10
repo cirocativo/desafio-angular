@@ -6,36 +6,49 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { LoginService } from '../services/login.service';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuestGuard implements CanActivate {
-  isLoggedIn = false;
+  private isAuthorizedSubject = new BehaviorSubject<boolean>(false);
+  public isAuthorized$: Observable<boolean> =
+    this.isAuthorizedSubject.asObservable();
 
-  constructor(private router: Router, private loginService: LoginService) {
-    this.loginService.isLoggedIn$.subscribe((isLoggedIn: boolean) => {
-      this.isLoggedIn = isLoggedIn;
-    });
-  }
-  async canActivate(
+  constructor(private router: Router, private loginService: LoginService) {}
+
+  canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<boolean> {
+  ): Observable<boolean> | boolean {
     const token_guest = localStorage.getItem('token_guest');
     const token_user = localStorage.getItem('token_user');
-
-    if (this.isLoggedIn) {
-      const isLoggedIn = await this.loginService.testToken();
-      if (isLoggedIn) {
-        return true;
-      } else {
-        this.loginService.logout();
-      }
-    } else if (token_guest) {
-      return true;
-    }
-    this.router.navigate(['']);
+    if (token_user) return this.checkAuthorization();
+    if (token_guest) return true;
     return false;
+  }
+
+  checkAuthorization() {
+    return this.loginService.testToken().pipe(
+      map((res: any) => {
+        if (res.allowed) {
+          console.log('está logado');
+
+          this.loginService.changeLoggedInSubject(true);
+          return true;
+        } else {
+          this.loginService.logout();
+
+          return false;
+        }
+      }),
+      catchError((error) => {
+        console.log(error);
+
+        this.loginService.changeLoggedInSubject(false);
+        return of(false);
+      })
+    );
   }
 }

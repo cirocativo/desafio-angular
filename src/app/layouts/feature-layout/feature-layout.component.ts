@@ -23,6 +23,7 @@ export class FeatureLayoutComponent {
     public dialog: MatDialog,
     private featuresService: FeaturesService
   ) {
+    console.log('aqui no features');
     setTimeout(() => {
       this.refreshData();
     });

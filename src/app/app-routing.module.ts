@@ -5,8 +5,13 @@ import { LoginLayoutComponent } from './layouts/login-layout/login-layout.compon
 import { FeatureLayoutComponent } from './layouts/feature-layout/feature-layout.component';
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { AuthGuestGuard } from './guards/authGuest.guard';
+import { AuthorizationService } from './services/authorization.service';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: HomeLayoutComponent,
+  },
   {
     path: 'login',
     component: LoginLayoutComponent,
@@ -16,10 +21,6 @@ const routes: Routes = [
     path: 'features',
     component: FeatureLayoutComponent,
     canActivate: [AuthGuestGuard],
-  },
-  {
-    path: '',
-    component: HomeLayoutComponent,
   },
   {
     path: '**',
@@ -32,4 +33,6 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  constructor(private authorizationService: AuthorizationService) {}
+}

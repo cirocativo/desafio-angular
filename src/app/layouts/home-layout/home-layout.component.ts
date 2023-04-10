@@ -17,15 +17,22 @@ export class HomeLayoutComponent {
     public snackbar: MatSnackBar,
     private loginService: LoginService
   ) {
-    try {
-      this.authorizationService.authGuest();
-      this.loginService.testToken();
-    } catch (error) {
-      if (error instanceof Error) {
-        this.snackbar.open(error.message, undefined, {
-          duration: 3000,
-        });
-      }
-    }
+    this.authorizationService.authGuest().subscribe({
+      next: (res) => {
+        console.log('guest ok', res);
+        localStorage.setItem('token_guest', res.accessToken);
+      },
+      error: (err) => {
+        console.log('guest error', err);
+      },
+    });
+    this.loginService.testToken().subscribe({
+      next: (res) => {
+        this.loginService.changeLoggedInSubject(true);
+      },
+      error: (err) => {
+        this.loginService.changeLoggedInSubject(false);
+      },
+    });
   }
 }
