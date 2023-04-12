@@ -13,19 +13,19 @@ import { ILoginRequest } from 'src/interfaces';
   styleUrls: ['./login-layout.component.css'],
 })
 export class LoginLayoutComponent {
+  public isLoggedIn = false;
   @ViewChild(SideNavComponent) sideNavComponent!: SideNavComponent;
-
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService,
     public snackBar: MatSnackBar,
     private router: Router
   ) {
-    this.loginService.isLoggedIn$.subscribe((isLoggedIn: boolean) => {
-      if (isLoggedIn) {
-        this.router.navigate(['']);
-      }
-    });
+    console.log('LOGIN');
+    this.isLoggedIn = this.loginService.getIsLoggedIn();
+    if (this.isLoggedIn) {
+      this.router.navigate(['']);
+    }
   }
 
   emailFormControl = new FormControl('', [
@@ -48,9 +48,14 @@ export class LoginLayoutComponent {
           });
           localStorage.setItem('token_user', res.accessToken);
           this.loginService.changeLoggedInSubject(true);
+
           this.router.navigate(['']);
         },
         error: (error) => {
+          if (error.cause && error.cause === 'invalid token') {
+            this.router.navigate(['/error']);
+          }
+          console.error(error);
           this.snackBar.open(error, undefined, {
             duration: 3000,
           });

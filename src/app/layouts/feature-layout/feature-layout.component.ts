@@ -1,10 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { FeatureNode, IFeature } from 'src/interfaces';
+import {
+  FeatureNode,
+  IFeature,
+  IFeatureHttp,
+  IGetFeaturesResponse,
+  ILink,
+} from 'src/interfaces';
 import { FeatureTreeComponent } from 'src/app/feature-tree/feature-tree.component';
 import { NewFeatureModalComponent } from 'src/app/modals/new-feature-modal/new-feature-modal.component';
 import { FeaturesService } from 'src/app/services/features.service';
 import { SideNavComponent } from 'src/app/side-nav/side-nav.component';
+import { catchError, map, of } from 'rxjs';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-feature-layout',
@@ -16,6 +24,14 @@ export class FeatureLayoutComponent {
   searchText = '';
   addButtonTooltip = 'Add Feature';
 
+  length = 0;
+  pageSizeOptions = [5, 10, 25];
+
+  offset = 0;
+  limit = 5;
+
+  featuresResponse!: IGetFeaturesResponse;
+
   @ViewChild(FeatureTreeComponent) featureTreeComponent!: FeatureTreeComponent;
   @ViewChild(SideNavComponent) sideNavComponent!: SideNavComponent;
 
@@ -23,21 +39,58 @@ export class FeatureLayoutComponent {
     public dialog: MatDialog,
     private featuresService: FeaturesService
   ) {
-    console.log('aqui no features');
     setTimeout(() => {
-      this.refreshData();
+      this.refreshDataHttp();
     });
+  }
+
+  handlePageEvent(e: PageEvent) {
+    console.log('estamos no handle page', e);
+
+    // if (this.pageIndex < e.pageIndex) {
+    //   console.log('next page');
+    //   this.pageLinkToLoad = this.featuresResponse._links.next;
+    // } else if (this.pageIndex > e.pageIndex) {
+    //   console.log('prev page');
+    //   this.pageLinkToLoad = this.featuresResponse._links.previous;
+    // } else {
+
+    this.offset = e.pageIndex * e.pageSize;
+    this.limit = e.pageSize;
+    // }
+    // this.pageEvent = e;
+    // this.length = e.length;
+    // this.pageSize = e.pageSize;
+    // this.pageIndex = e.pageIndex;
+    this.refreshDataHttp();
   }
 
   onSearchTextChanged(text: string) {
     this.searchText = text;
-    this.refreshData();
+    this.refreshDataHttp();
   }
   addNewFeature(): void {
     const dialogRef = this.dialog.open(NewFeatureModalComponent);
 
     dialogRef.afterClosed().subscribe(() => {
-      this.refreshData();
+      this.refreshDataHttp();
+    });
+  }
+
+  refreshDataHttp() {
+    console.log('Refreshing data:', this.offset, this.limit);
+    this.featuresService.getFeaturesHttp(this.offset, this.limit).subscribe({
+      next: (res) => {
+        this.featuresResponse = res;
+        console.log(res);
+        this.data = this.transformToTree(res.items);
+        this.featureTreeComponent.dataSource.data = this.data;
+
+        this.length = res.count;
+      },
+      error: (error) => {
+        console.log('Error while refreshing data', error);
+      },
     });
   }
 
@@ -54,6 +107,7 @@ export class FeatureLayoutComponent {
 
     this.featureTreeComponent.dataSource.data = this.data;
   }
+
   transformToTree(features: IFeature[]): FeatureNode[] {
     const transformedData: FeatureNode[] = [];
 

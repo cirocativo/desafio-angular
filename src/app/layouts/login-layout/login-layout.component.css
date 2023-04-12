@@ -1,8 +1,21 @@
+mat-toolbar {
+  position: sticky;
+  left: 0;
+  width: 100%;
+  top: 0;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+}
+
 .login-container {
   height: 100%;
 
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 .login-form {
   min-width: 225px;

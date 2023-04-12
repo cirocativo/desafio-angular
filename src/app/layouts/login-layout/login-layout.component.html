@@ -1,4 +1,8 @@
-<div class="login-container">
+<mat-toolbar *ngIf="!isLoggedIn">
+  <h1>Akiry</h1>
+</mat-toolbar>
+<div class="login-container" *ngIf="!isLoggedIn">
+  <h2>Login</h2>
   <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="full-width">
       <mat-label>E-mail</mat-label>

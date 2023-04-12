@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -35,6 +36,7 @@ import { LoginLayoutComponent } from './layouts/login-layout/login-layout.compon
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorLayoutComponent } from './layouts/error-layout/error-layout.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import { HttpClientModule } from '@angular/common/http';
     FeatureLayoutComponent,
     LoginLayoutComponent,
     HomeLayoutComponent,
+    ErrorLayoutComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -65,6 +68,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
+    MatPaginatorModule,
     MatSelectModule,
     MatSidenavModule,
     MatSnackBarModule,

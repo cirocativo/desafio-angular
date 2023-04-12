@@ -1,8 +1,11 @@
-<app-header (menuClicked)="sideNavComponent.sidenav.toggle()"
-  ><h1>Akiry</h1></app-header
->
-<app-side-nav>
-  <div class="main-container">
-    <router-outlet></router-outlet>
-  </div>
-</app-side-nav>
+<router-outlet *ngIf="!isLoggedIn; else mainApp"></router-outlet>
+<ng-template #mainApp>
+  <app-header (menuClicked)="sideNavComponent.sidenav.toggle()"
+    ><h1>Akiry</h1></app-header
+  >
+  <app-side-nav>
+    <div class="main-container">
+      <router-outlet></router-outlet>
+    </div>
+  </app-side-nav>
+</ng-template>

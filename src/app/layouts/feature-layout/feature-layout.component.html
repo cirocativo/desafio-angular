@@ -17,6 +17,12 @@
 <div class="features-container">
   <app-feature-tree
     [data]="data"
-    (treeChanged)="refreshData()"
+    (treeChanged)="refreshDataHttp()"
   ></app-feature-tree>
+  <mat-paginator
+    [length]="length"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="handlePageEvent($event)"
+  >
+  </mat-paginator>
 </div>

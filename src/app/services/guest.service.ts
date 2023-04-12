@@ -7,10 +7,10 @@ import { IAuthGuestResponse } from 'src/interfaces';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthorizationService {
+export class GuestService {
   constructor(private http: HttpClient) {}
 
-  authGuest(): Observable<IAuthGuestResponse> {
+  generateGuestToken(): Observable<IAuthGuestResponse> {
     return this.http.post<IAuthGuestResponse>(
       `${environment.api}/token/guest`,
       environment.guest

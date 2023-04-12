@@ -5,12 +5,15 @@ import { LoginLayoutComponent } from './layouts/login-layout/login-layout.compon
 import { FeatureLayoutComponent } from './layouts/feature-layout/feature-layout.component';
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { AuthGuestGuard } from './guards/authGuest.guard';
-import { AuthorizationService } from './services/authorization.service';
+import { AuthUserGuard } from './guards/authUser.guard';
+import { ErrorLayoutComponent } from './layouts/error-layout/error-layout.component';
+import { ErrorGuard } from './guards/error.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeLayoutComponent,
+    canActivate: [AuthUserGuard],
   },
   {
     path: 'login',
@@ -20,7 +23,12 @@ const routes: Routes = [
   {
     path: 'features',
     component: FeatureLayoutComponent,
-    canActivate: [AuthGuestGuard],
+    canActivate: [AuthUserGuard],
+  },
+  {
+    path: 'error',
+    component: ErrorLayoutComponent,
+    canActivate: [ErrorGuard],
   },
   {
     path: '**',
@@ -33,6 +41,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-  constructor(private authorizationService: AuthorizationService) {}
-}
+export class AppRoutingModule {}
