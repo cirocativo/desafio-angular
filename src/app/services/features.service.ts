@@ -1,13 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { features } from 'src/database/features.populate';
 import { environment } from 'src/environments/environment.development';
 import {
   IFeature,
+  IFeatureHttp,
   IFeatureUpdate,
   IGetFeaturesResponse,
   IService,
+  IServiceHttp,
 } from 'src/interfaces';
 import { v4 as uuid } from 'uuid';
 
@@ -27,24 +29,46 @@ export class FeaturesService {
     features.push(newFeature);
   }
 
-  getFeatures(): IFeature[] {
-    return features;
+  getFeatures(offset: number, limit: number): Observable<IGetFeaturesResponse> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .get<IGetFeaturesResponse>(
+          `${environment.api}/root/features?offset=${offset}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token_user,
+            },
+          }
+        )
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
   }
 
-  getFeaturesHttp(
+  getFeaturesBySearch(
     offset: number,
-    limit: number
+    limit: number,
+    text: string
   ): Observable<IGetFeaturesResponse> {
     const token_user = localStorage.getItem('token_user');
     if (token_user) {
-      return this.http.get<IGetFeaturesResponse>(
-        `${environment.api}/root/features?offset=${offset}&limit=${limit}`,
-        {
-          headers: {
-            Authorization: 'Bearer ' + token_user,
-          },
-        }
-      );
+      return this.http
+        .get<IGetFeaturesResponse>(
+          `${environment.api}/root/features?offset=${offset}&limit=${limit}&search=${text}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token_user,
+            },
+          }
+        )
+        .pipe(catchError(this.handleError));
     } else {
       return throwError(
         () =>
@@ -79,41 +103,96 @@ export class FeaturesService {
     return throwError(() => new Error(errorMessage));
   }
 
-  getFeatureById(id: string): IFeature {
-    const feature = features.find((feature) => feature.id === id);
-    if (feature) return feature;
-    throw new Error(`Could not find this feature`);
-  }
-
-  updateFeature(id: string, feature: IFeatureUpdate) {
-    console.log(feature);
-    console.log(feature.name);
-    console.log(feature.description);
-    const featureToUpdateIndex = features.findIndex((f) => f.id === id);
-
-    if (feature.name != features[featureToUpdateIndex].name)
-      this.checkFeatureExclusivity(feature);
-
-    if (feature.description != undefined) {
-      features[featureToUpdateIndex].description = feature.description;
-    }
-    if (feature.name) {
-      features[featureToUpdateIndex].name = feature.name;
+  getFeature(id: string): Observable<IFeatureHttp> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .get<IFeatureHttp>(`${environment.api}/root/features/${id}`, {
+          headers: {
+            Authorization: 'Bearer ' + token_user,
+          },
+        })
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
     }
   }
 
-  deleteFeature(feature: IFeature): void {
-    const featureToDeleteIndex = features.findIndex((f) => feature.id === f.id);
-
-    features.splice(featureToDeleteIndex, 1);
+  deleteFeature(id: string): Observable<IFeatureHttp> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .delete<IFeatureHttp>(`${environment.api}/root/features/${id}`, {
+          headers: {
+            Authorization: 'Bearer ' + token_user,
+          },
+        })
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
   }
 
-  addServiceToFeature(feature: IFeature, service: IService) {
-    this.checkServiceExclusivity(service);
+  updateFeature(id: string, feature: IFeatureUpdate): Observable<IFeatureHttp> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .patch<IFeatureHttp>(
+          `${environment.api}/root/features/${id}`,
+          feature,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token_user,
+            },
+          }
+        )
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
+  }
 
-    const featureIndex = features.findIndex((f) => feature.id === f.id);
-
-    features[featureIndex].services.push(service);
+  addServiceToFeature(
+    feature: IFeature,
+    service: IService
+  ): Observable<IFeatureHttp> {
+    const token_user = localStorage.getItem('token_user');
+    console.log('Adding service to feature', feature);
+    if (token_user) {
+      return this.http
+        .post<IFeatureHttp>(
+          `${environment.api}/root/features/${feature.id}/services`,
+          service,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token_user,
+            },
+          }
+        )
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
   }
 
   updateFeatureServiceFromIndex(
@@ -138,6 +217,84 @@ export class FeaturesService {
     }
 
     features[featureIndex].services[serviceIndex] = newService;
+  }
+
+  getServiceById(
+    featureId: string,
+    serviceId: string
+  ): Observable<IServiceHttp> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .get<IServiceHttp>(
+          `${environment.api}/root/features/${featureId}/services/${serviceId}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token_user,
+            },
+          }
+        )
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
+  }
+
+  updateServiceFromFeature(
+    feature: IFeature,
+    serviceId: string,
+    service: Partial<IService>
+  ): Observable<IServiceHttp> {
+    console.log('Updating service', service);
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .patch<IServiceHttp>(
+          `${environment.api}/root/features/${feature.id}/services/${serviceId}`,
+          service,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token_user,
+            },
+          }
+        )
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
+  }
+
+  deleteServiceFromFeature(featureId: string, serviceId: string) {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .delete(
+          `${environment.api}/root/features/${featureId}/services/${serviceId}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token_user,
+            },
+          }
+        )
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
   }
 
   deleteFeatureServiceFromIndex(feature: IFeature, serviceIndex: number): void {

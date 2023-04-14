@@ -10,6 +10,7 @@ import {
   hasNoSpaceValidator,
   endsWithValidCharactersValidator,
 } from '../../../validators';
+import { IFeatureHttp } from 'src/interfaces';
 
 @Component({
   selector: 'app-new-service-modal',
@@ -43,30 +44,25 @@ export class NewServiceModalComponent {
     private featuresService: FeaturesService,
     public dialogRef: MatDialogRef<NewServiceModalComponent>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: IFeatureHttp
   ) {}
 
   create(): void {
-    try {
-      if (this.data.feature) {
-        this.featuresService.addServiceToFeature(
-          this.data.feature,
-          this.newServiceForm.value
-        );
-      } else {
-        this.featuresService.checkServiceExclusivity(this.newServiceForm.value);
-        this.data.push(this.newServiceForm.value);
-      }
-      this.snackbar.open('Service added', undefined, {
-        duration: 1500,
+    this.featuresService
+      .addServiceToFeature(this.data, this.newServiceForm.value)
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Service added', undefined, {
+            duration: 3000,
+          });
+          this.cancel();
+        },
+        error: (err) => {
+          this.snackbar.open(err, undefined, {
+            duration: 3000,
+          });
+        },
       });
-      this.cancel();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      this.snackbar.open(error.message, undefined, {
-        duration: 3000,
-      });
-    }
   }
   verifyEndpoint(): void {
     if (this.newServiceForm.get('endpoint')?.hasError('hasValidCharacters')) {

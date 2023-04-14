@@ -60,7 +60,9 @@ export class EditServiceModalComponent implements AfterViewInit {
     private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: IServiceHandler
   ) {
-    const sourceService = data.feature.services[data.serviceIndex];
+    const sourceService = data.feature.services.find(
+      (service) => service.id === data.serviceId
+    );
 
     Object.assign(this.service, sourceService);
 
@@ -84,18 +86,24 @@ export class EditServiceModalComponent implements AfterViewInit {
       this.endpointInput.nativeElement.focus();
     });
   }
+
+  updateMethod() {
+    this.handleErrorsBeforeSubmit({
+      method: this.updateServiceForm.value.method,
+    });
+  }
+
   updateEndpoint() {
-    if (
-      this.updateServiceForm.get('endpoint')?.getError('repeatedEndpoint') ||
-      this.updateServiceForm.get('method')?.getError('repeatedEndpoint')
-    ) {
-      this.updateServiceForm.get('endpoint')?.setErrors(null);
-      this.updateServiceForm.get('method')?.setErrors(null);
-      this.endpointError = null;
-    }
+    this.handleErrorsBeforeSubmit({
+      endpoint: this.updateServiceForm.value.endpoint,
+    });
+  }
+
+  handleErrorsBeforeSubmit(service: Partial<IService>) {
+    this.reviewErrors();
     try {
       if (!this.updateServiceForm.get('endpoint')?.errors) {
-        this.update();
+        this.update(service);
         if (!this.endpointError) {
           this.hasClickedOnEndpoint = false;
         }
@@ -106,15 +114,26 @@ export class EditServiceModalComponent implements AfterViewInit {
         );
       }
     } catch (error) {
-      if (error instanceof Error) {
-        this.updateServiceForm
-          .get('endpoint')
-          ?.setErrors({ repeatedEndpoint: true });
-        this.updateServiceForm
-          .get('method')
-          ?.setErrors({ repeatedEndpoint: true });
-        this.endpointError = error.message;
-      }
+      this.setRepeatedEndpointError(true);
+    }
+  }
+
+  setRepeatedEndpointError(bool: boolean): void {
+    this.updateServiceForm
+      .get('endpoint')
+      ?.setErrors({ repeatedEndpoint: bool });
+    this.updateServiceForm.get('method')?.setErrors({ repeatedEndpoint: bool });
+    if (bool) this.endpointError = 'This endpoint already exists';
+  }
+
+  private reviewErrors() {
+    if (
+      this.updateServiceForm.get('endpoint')?.getError('repeatedEndpoint') ||
+      this.updateServiceForm.get('method')?.getError('repeatedEndpoint')
+    ) {
+      this.updateServiceForm.get('endpoint')?.setErrors(null);
+      this.updateServiceForm.get('method')?.setErrors(null);
+      this.endpointError = null;
     }
   }
 
@@ -126,34 +145,37 @@ export class EditServiceModalComponent implements AfterViewInit {
   }
   updateDescription() {
     try {
-      this.update();
+      this.update({
+        description: this.updateServiceForm.value.description,
+      });
       this.hasClickedOnDescription = false;
     } catch (e) {
       console.error(e);
     }
   }
-  update() {
-    try {
-      this.featuresService.updateFeatureServiceFromIndex(
-        this.data.feature,
-        this.data.serviceIndex,
-        this.updateServiceForm.value
-      );
-      this.snackbar.open('Service updated successfully!', undefined, {
-        duration: 1500,
-      });
-      this.updateServiceForm.get('endpoint')?.setErrors(null);
-      this.updateServiceForm.get('method')?.setErrors(null);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      this.snackbar.open(error.message, undefined, {
-        duration: 3000,
+  update(service: Partial<IService>) {
+    this.featuresService
+      .updateServiceFromFeature(this.data.feature, this.data.serviceId, service)
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Service updated successfully!', undefined, {
+            duration: 1500,
+          });
+          this.updateServiceForm.get('endpoint')?.setErrors(null);
+          this.updateServiceForm.get('method')?.setErrors(null);
+        },
+        error: (err) => {
+          this.snackbar.open(err, undefined, {
+            duration: 3000,
+          });
+          this.setRepeatedEndpointError(true);
+          console.log(this.service);
+          throw new Error(err);
+        },
       });
-
-      throw new Error(error.message);
-    }
   }
+
   verifyEndpoint(): void {
     if (
       this.updateServiceForm.get('endpoint')?.hasError('hasValidCharacters')

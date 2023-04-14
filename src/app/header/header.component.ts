@@ -22,22 +22,8 @@ export class HeaderComponent {
 
   onSearchTextChanged(text: string) {
     this.searchText = text;
-    this.refreshData();
   }
 
-  refreshData(): void {
-    const features = this.featuresService
-      .getFeatures()
-      .filter((feature) =>
-        feature.name
-          .toLocaleLowerCase()
-          .includes(this.searchText.toLocaleLowerCase())
-      );
-
-    this.data = this.transformToTree(features);
-
-    // this.featureTreeComponent.dataSource.data = this.data;
-  }
   transformToTree(features: IFeature[]): FeatureNode[] {
     const transformedData: FeatureNode[] = [];
 
