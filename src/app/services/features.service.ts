@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
-import { features } from 'src/database/features.populate';
 import { environment } from 'src/environments/environment.development';
 import {
   IFeature,
@@ -11,7 +10,6 @@ import {
   IService,
   IServiceHttp,
 } from 'src/interfaces';
-import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -19,14 +17,24 @@ import { v4 as uuid } from 'uuid';
 export class FeaturesService {
   constructor(private http: HttpClient) {}
 
-  createFeature(feature: IFeature): void {
-    const id = uuid();
-
-    const newFeature: IFeature = { ...feature, id: id };
-
-    this.checkFeatureExclusivity(newFeature);
-
-    features.push(newFeature);
+  createFeature(feature: IFeature): Observable<IFeatureHttp> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .post<IFeatureHttp>(`${environment.api}/root/features`, feature, {
+          headers: {
+            Authorization: 'Bearer ' + token_user,
+          },
+        })
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
   }
 
   getFeatures(offset: number, limit: number): Observable<IGetFeaturesResponse> {
@@ -168,7 +176,7 @@ export class FeaturesService {
   }
 
   addServiceToFeature(
-    feature: IFeature,
+    feature: IFeatureHttp,
     service: IService
   ): Observable<IFeatureHttp> {
     const token_user = localStorage.getItem('token_user');
@@ -193,30 +201,6 @@ export class FeaturesService {
           })
       );
     }
-  }
-
-  updateFeatureServiceFromIndex(
-    feature: IFeature,
-    serviceIndex: number,
-    service: Partial<IService>
-  ) {
-    const featureIndex = features.findIndex((f) => feature.id === f.id);
-
-    const oldService = features[featureIndex].services[serviceIndex];
-
-    const newService: Partial<IService> = {
-      method: service.method || oldService.method,
-      endpoint: service.endpoint || oldService.endpoint,
-      description: service.description || oldService.description,
-    };
-    if (
-      newService.method != oldService.method ||
-      newService.endpoint != oldService.endpoint
-    ) {
-      this.checkServiceExclusivity(newService);
-    }
-
-    features[featureIndex].services[serviceIndex] = newService;
   }
 
   getServiceById(
@@ -246,7 +230,7 @@ export class FeaturesService {
   }
 
   updateServiceFromFeature(
-    feature: IFeature,
+    feature: IFeatureHttp,
     serviceId: string,
     service: Partial<IService>
   ): Observable<IServiceHttp> {
@@ -294,35 +278,6 @@ export class FeaturesService {
             cause: 'invalid token',
           })
       );
-    }
-  }
-
-  deleteFeatureServiceFromIndex(feature: IFeature, serviceIndex: number): void {
-    const featureIndex = features.findIndex((f) => feature.id === f.id);
-
-    features[featureIndex].services.splice(serviceIndex, 1);
-  }
-
-  checkFeatureExclusivity(feature: IFeature | IFeatureUpdate) {
-    if (feature.name) {
-      const featureNameAlreadyExists = features.find(
-        (f) => f.name === feature.name
-      );
-
-      if (featureNameAlreadyExists)
-        throw new Error('This feature name already exists');
-    }
-  }
-
-  checkServiceExclusivity(service: Partial<IService>) {
-    const repeatedService = features.some((feature) =>
-      feature.services.some(
-        (s) => s.method === service.method && s.endpoint === service.endpoint
-      )
-    );
-
-    if (repeatedService) {
-      throw new Error('This service already exists');
     }
   }
 }

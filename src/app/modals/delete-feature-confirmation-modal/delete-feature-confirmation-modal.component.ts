@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FeaturesService } from 'src/app/services/features.service';
 
-import { IFeature } from 'src/interfaces';
+import { IFeatureHttp } from 'src/interfaces';
 
 @Component({
   selector: 'app-delete-confirmation-modal',
@@ -11,12 +11,12 @@ import { IFeature } from 'src/interfaces';
   styleUrls: ['./delete-feature-confirmation-modal.component.css'],
 })
 export class DeleteFeatureConfirmationModalComponent {
-  feature: IFeature;
+  feature: IFeatureHttp;
   constructor(
     private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<DeleteFeatureConfirmationModalComponent>,
     private featuresService: FeaturesService,
-    @Inject(MAT_DIALOG_DATA) public data: IFeature
+    @Inject(MAT_DIALOG_DATA) public data: IFeatureHttp
   ) {
     this.feature = data;
   }

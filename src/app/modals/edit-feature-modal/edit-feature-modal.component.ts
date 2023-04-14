@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FeaturesService } from 'src/app/services/features.service';
-import { IFeature, IFeatureUpdate } from 'src/interfaces';
+import { IFeature, IFeatureHttp, IFeatureUpdate } from 'src/interfaces';
 import { hasValidCharactersValidator } from 'src/validators';
 
 @Component({
@@ -33,7 +33,7 @@ export class EditFeatureModalComponent {
     private featuresService: FeaturesService,
     public dialogRef: MatDialogRef<EditFeatureModalComponent>,
     private elementRef: ElementRef,
-    @Inject(MAT_DIALOG_DATA) public data: IFeature
+    @Inject(MAT_DIALOG_DATA) public data: IFeatureHttp
   ) {
     Object.assign(this.feature, data);
     this.descriptionTextarea = this.elementRef.nativeElement.querySelector(

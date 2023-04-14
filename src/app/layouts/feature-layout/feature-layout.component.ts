@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   FeatureNode,
-  IFeature,
   IFeatureHttp,
   IGetFeaturesResponse,
 } from 'src/interfaces';
