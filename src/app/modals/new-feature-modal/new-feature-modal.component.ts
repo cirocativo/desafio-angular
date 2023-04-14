@@ -45,26 +45,18 @@ export class NewFeatureModalComponent {
   }
 
   create() {
-    if (this.services.length === 0) {
-      this.snackbar.open('You need to add at least one service', undefined, {
-        duration: 2000,
-      });
-    } else {
-      this.newFeatureForm.value.services = this.services;
-      try {
-        this.featuresService.createFeature(this.newFeatureForm.value);
-
+    this.featuresService.createFeature(this.newFeatureForm.value).subscribe({
+      next: () => {
         this.snackbar.open('Feature created successfully!', undefined, {
           duration: 1500,
         });
-
         this.cancel();
-      } catch (e) {
-        this.snackbar.open('This feature name already exists', undefined, {
+      },
+      error: (error) =>
+        this.snackbar.open(error, undefined, {
           duration: 3000,
-        });
-      }
-    }
+        }),
+    });
   }
 
   cancel(): void {

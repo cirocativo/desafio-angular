@@ -14,7 +14,7 @@ import {
 } from '@angular/material/tree';
 import { MatPaginator } from '@angular/material/paginator';
 
-import { FeatureNode, IFeature, IFeatureHttp } from 'src/interfaces';
+import { FeatureNode } from 'src/interfaces';
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 import { DeleteServiceConfirmationModalComponent } from '../modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';

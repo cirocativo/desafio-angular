@@ -11,7 +11,6 @@ import {
   IService,
   IServiceHttp,
 } from 'src/interfaces';
-import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -19,14 +18,24 @@ import { v4 as uuid } from 'uuid';
 export class FeaturesService {
   constructor(private http: HttpClient) {}
 
-  createFeature(feature: IFeature): void {
-    const id = uuid();
-
-    const newFeature: IFeature = { ...feature, id: id };
-
-    this.checkFeatureExclusivity(newFeature);
-
-    features.push(newFeature);
+  createFeature(feature: IFeature): Observable<IFeatureHttp> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http
+        .post<IFeatureHttp>(`${environment.api}/root/features`, feature, {
+          headers: {
+            Authorization: 'Bearer ' + token_user,
+          },
+        })
+        .pipe(catchError(this.handleError));
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
   }
 
   getFeatures(offset: number, limit: number): Observable<IGetFeaturesResponse> {
