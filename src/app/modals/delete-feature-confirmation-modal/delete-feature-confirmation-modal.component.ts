@@ -24,9 +24,17 @@ export class DeleteFeatureConfirmationModalComponent {
     this.dialogRef.close();
   }
   delete(): void {
-    this.featuresService.deleteFeature(this.feature);
-    this.snackbar.open('Feature deleted successfully!', undefined, {
-      duration: 1500,
+    this.featuresService.deleteFeature(this.feature.id).subscribe({
+      next: () => {
+        this.snackbar.open('Feature deleted successfully!', undefined, {
+          duration: 1500,
+        });
+      },
+      error: (error) => {
+        this.snackbar.open(error, undefined, {
+          duration: 3000,
+        });
+      },
     });
     this.cancel();
   }

@@ -5,14 +5,13 @@ import {
   IFeature,
   IFeatureHttp,
   IGetFeaturesResponse,
-  ILink,
 } from 'src/interfaces';
 import { FeatureTreeComponent } from 'src/app/feature-tree/feature-tree.component';
 import { NewFeatureModalComponent } from 'src/app/modals/new-feature-modal/new-feature-modal.component';
 import { FeaturesService } from 'src/app/services/features.service';
 import { SideNavComponent } from 'src/app/side-nav/side-nav.component';
-import { catchError, map, of } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-feature-layout',
@@ -21,7 +20,9 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class FeatureLayoutComponent {
   data: FeatureNode[] = [];
+
   searchText = '';
+
   addButtonTooltip = 'Add Feature';
 
   length = 0;
@@ -37,7 +38,8 @@ export class FeatureLayoutComponent {
 
   constructor(
     public dialog: MatDialog,
-    private featuresService: FeaturesService
+    private featuresService: FeaturesService,
+    private snackBar: MatSnackBar
   ) {
     setTimeout(() => {
       this.refreshDataHttp();
@@ -45,23 +47,9 @@ export class FeatureLayoutComponent {
   }
 
   handlePageEvent(e: PageEvent) {
-    console.log('estamos no handle page', e);
-
-    // if (this.pageIndex < e.pageIndex) {
-    //   console.log('next page');
-    //   this.pageLinkToLoad = this.featuresResponse._links.next;
-    // } else if (this.pageIndex > e.pageIndex) {
-    //   console.log('prev page');
-    //   this.pageLinkToLoad = this.featuresResponse._links.previous;
-    // } else {
-
     this.offset = e.pageIndex * e.pageSize;
     this.limit = e.pageSize;
-    // }
-    // this.pageEvent = e;
-    // this.length = e.length;
-    // this.pageSize = e.pageSize;
-    // this.pageIndex = e.pageIndex;
+
     this.refreshDataHttp();
   }
 
@@ -79,36 +67,48 @@ export class FeatureLayoutComponent {
 
   refreshDataHttp() {
     console.log('Refreshing data:', this.offset, this.limit);
-    this.featuresService.getFeaturesHttp(this.offset, this.limit).subscribe({
-      next: (res) => {
-        this.featuresResponse = res;
-        console.log(res);
-        this.data = this.transformToTree(res.items);
-        this.featureTreeComponent.dataSource.data = this.data;
+    this.featuresService
+      .getFeaturesBySearch(this.offset, this.limit, this.searchText)
+      .subscribe({
+        next: (res) => {
+          this.featuresResponse = res;
+          console.log(res);
+          this.data = this.transformToTree(res.items);
+          this.featureTreeComponent.dataSource.data = this.data;
 
-        this.length = res.count;
-      },
-      error: (error) => {
-        console.log('Error while refreshing data', error);
-      },
-    });
+          this.length = res.count;
+        },
+        error: (error) => {
+          console.log('Error while refreshing data', error);
+          this.snackBar.open(error, undefined, {
+            duration: 3000,
+          });
+        },
+      });
   }
 
-  refreshData(): void {
-    const features = this.featuresService
-      .getFeatures()
-      .filter((feature) =>
-        feature.name
-          .toLocaleLowerCase()
-          .includes(this.searchText.toLocaleLowerCase())
-      );
+  refreshDataWithSearch(text: string) {
+    this.featuresService
+      .getFeaturesBySearch(this.offset, this.limit, text)
+      .subscribe({
+        next: (res) => {
+          this.featuresResponse = res;
+          console.log(res);
+          this.data = this.transformToTree(res.items);
+          this.featureTreeComponent.dataSource.data = this.data;
 
-    this.data = this.transformToTree(features);
-
-    this.featureTreeComponent.dataSource.data = this.data;
+          this.length = res.count;
+        },
+        error: (error) => {
+          console.log('Error while refreshing data', error);
+          this.snackBar.open(error, undefined, {
+            duration: 3000,
+          });
+        },
+      });
   }
 
-  transformToTree(features: IFeature[]): FeatureNode[] {
+  transformToTree(features: IFeatureHttp[]): FeatureNode[] {
     const transformedData: FeatureNode[] = [];
 
     features.forEach((feature) => {
@@ -121,7 +121,8 @@ export class FeatureLayoutComponent {
         const serviceNode = {} as FeatureNode;
         serviceNode.name = service.method + ' ' + service.endpoint;
         serviceNode.description = service.description || '';
-        serviceNode.id = feature.id;
+        serviceNode.id = service.id;
+        serviceNode.featureId = feature.id;
         serviceNode.index = index;
         serviceNode.method = service.method?.toLowerCase() || '';
         services.push(serviceNode);

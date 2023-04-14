@@ -78,22 +78,20 @@ export class EditFeatureModalComponent {
   }
 
   update(data: IFeatureUpdate) {
-    try {
-      const feature_id: string = this.data.id;
+    const feature_id: string = this.data.id;
 
-      this.featuresService.updateFeature(feature_id, data);
-
-      this.snackbar.open('Feature updated successfully!', undefined, {
-        duration: 1500,
-      });
-      //this.cancel();
-    } catch (error) {
-      if (error instanceof Error) {
+    this.featuresService.updateFeature(feature_id, data).subscribe({
+      next: () => {
+        this.snackbar.open('Feature updated successfully!', undefined, {
+          duration: 1500,
+        });
+      },
+      error: (error) => {
         this.snackbar.open(error.message, undefined, {
           duration: 3000,
         });
-      }
-    }
+      },
+    });
   }
 
   cancel(): void {

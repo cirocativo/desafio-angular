@@ -9,7 +9,7 @@
           name="method"
           [(ngModel)]="service.method"
           #methodSelect
-          (selectionChange)="updateEndpoint()"
+          (selectionChange)="updateMethod()"
         >
           <mat-option value="GET">GET</mat-option>
           <mat-option value="POST">POST</mat-option>

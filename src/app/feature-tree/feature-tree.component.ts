@@ -1,6 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -13,33 +12,25 @@ import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
 } from '@angular/material/tree';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 
-import { IFeature } from 'src/interfaces';
+import { FeatureNode, IFeature, IFeatureHttp } from 'src/interfaces';
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 import { DeleteServiceConfirmationModalComponent } from '../modals/delete-service-confirmation-modal/delete-service-confirmation-modal.component';
 import { DeleteFeatureConfirmationModalComponent } from '../modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { EditFeatureModalComponent } from '../modals/edit-feature-modal/edit-feature-modal.component';
 import { FeaturesService } from '../services/features.service';
-import { map, startWith, switchMap } from 'rxjs';
 
-interface ExampleFlatNode {
+interface IFlatNode {
   expandable: boolean;
   name: string;
   level: number;
   description: string;
   id: string;
+  featureId: string;
   index: number;
   method: string;
-}
-interface FeatureNode {
-  name: string;
-  description: string;
-  id: string;
-  index: number;
-  method: string;
-  children?: FeatureNode[];
 }
 
 @Component({
@@ -47,14 +38,7 @@ interface FeatureNode {
   templateUrl: './feature-tree.component.html',
   styleUrls: ['./feature-tree.component.css'],
 })
-export class FeatureTreeComponent implements AfterViewInit {
-  length = 50;
-  pageSize = 5;
-  pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
-
-  pageEvent!: PageEvent;
-
+export class FeatureTreeComponent {
   @Input() data: FeatureNode[] = [];
 
   @Output() treeChanged: EventEmitter<FeatureNode[]> = new EventEmitter();
@@ -65,23 +49,20 @@ export class FeatureTreeComponent implements AfterViewInit {
     this.treeChanged.emit();
   }
 
-  ngAfterViewInit() {
-    // this.paginator.page.pipe(() => map((data) => console.log(data)));
-  }
-
   private _transformer = (node: FeatureNode, level: number) => {
     return {
-      expandable: !!node.children && node.children.length > 0,
+      expandable: !node.featureId,
       name: node.name,
       level: level,
       description: node.description,
       id: node.id,
+      featureId: node.featureId,
       index: node.index,
       method: node.method,
     };
   };
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
+  treeControl = new FlatTreeControl<IFlatNode>(
     (node) => node.level,
     (node) => node.expandable
   );
@@ -103,110 +84,109 @@ export class FeatureTreeComponent implements AfterViewInit {
     this.dataSource.data = this.data;
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  hasChild = (_: number, node: IFlatNode) => node.expandable;
 
-  openFeatureDetails(node: ExampleFlatNode) {
-    try {
-      const feature: IFeature = this.featuresService.getFeatureById(node.id);
-      const dialogRef = this.dialog.open(EditFeatureModalComponent, {
-        data: feature,
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-        this.onTreeChanged();
-      });
-    } catch (e) {
-      if (e instanceof Error)
-        this.snackBar.open(e.message, undefined, {
+  openFeatureDetails(node: IFlatNode) {
+    this.featuresService.getFeature(node.id).subscribe({
+      next: (feature) => {
+        const dialogRef = this.dialog.open(EditFeatureModalComponent, {
+          data: feature,
+        });
+        dialogRef.afterClosed().subscribe(() => {
+          this.onTreeChanged();
+        });
+      },
+      error: (error) => {
+        this.snackBar.open(error, undefined, {
           duration: 1500,
         });
-    }
+      },
+    });
   }
 
-  addService(node: ExampleFlatNode) {
-    try {
-      const feature: IFeature = this.featuresService.getFeatureById(node.id);
-
-      const dialogRef = this.dialog.open(NewServiceModalComponent, {
-        data: { feature: feature },
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-        this.onTreeChanged();
-      });
-    } catch (e) {
-      if (e instanceof Error)
-        this.snackBar.open(e.message, undefined, {
+  addService(node: IFlatNode) {
+    console.log(node);
+    this.featuresService.getFeature(node.id).subscribe({
+      next: (feature) => {
+        const dialogRef = this.dialog.open(NewServiceModalComponent, {
+          data: feature,
+        });
+        dialogRef.afterClosed().subscribe(() => {
+          this.onTreeChanged();
+        });
+      },
+      error: (error) => {
+        this.snackBar.open(error, undefined, {
           duration: 1500,
         });
-    }
+      },
+    });
   }
 
-  openServiceDetails(node: ExampleFlatNode) {
-    try {
-      const feature: IFeature = this.featuresService.getFeatureById(node.id);
-      console.log(feature, node.index);
-      const dialogRef = this.dialog.open(EditServiceModalComponent, {
-        data: {
-          feature: feature,
-          serviceIndex: node.index,
-        },
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-        this.onTreeChanged();
-      });
-    } catch (e) {
-      if (e instanceof Error)
-        this.snackBar.open(e.message, undefined, {
-          duration: 1500,
-        });
-    }
-  }
-
-  deleteService(node: ExampleFlatNode) {
-    try {
-      const feature: IFeature = this.featuresService.getFeatureById(node.id);
-
-      const dialogRef = this.dialog.open(
-        DeleteServiceConfirmationModalComponent,
-        {
+  openServiceDetails(node: IFlatNode) {
+    this.featuresService.getFeature(node.featureId).subscribe({
+      next: (feature) => {
+        const dialogRef = this.dialog.open(EditServiceModalComponent, {
           data: {
             feature: feature,
-            serviceIndex: node.index,
+            serviceId: node.id,
           },
-        }
-      );
-
-      dialogRef.afterClosed().subscribe(() => {
-        this.onTreeChanged();
-      });
-    } catch (e) {
-      if (e instanceof Error)
-        this.snackBar.open(e.message, undefined, {
+        });
+        dialogRef.afterClosed().subscribe(() => {
+          this.onTreeChanged();
+        });
+      },
+      error: (e) => {
+        this.snackBar.open(e, undefined, {
           duration: 1500,
         });
-    }
+      },
+    });
   }
 
-  deleteFeature(node: ExampleFlatNode): void {
-    try {
-      const feature: IFeature = this.featuresService.getFeatureById(node.id);
-      const dialogRef = this.dialog.open(
-        DeleteFeatureConfirmationModalComponent,
-        {
-          data: feature,
-        }
-      );
-
-      dialogRef.afterClosed().subscribe(() => {
-        this.onTreeChanged();
-      });
-    } catch (e) {
-      if (e instanceof Error)
-        this.snackBar.open(e.message, undefined, {
+  deleteService(node: IFlatNode) {
+    this.featuresService.getFeature(node.featureId).subscribe({
+      next: (feature) => {
+        const dialogRef = this.dialog.open(
+          DeleteServiceConfirmationModalComponent,
+          {
+            data: {
+              feature: feature,
+              serviceId: node.id,
+            },
+          }
+        );
+        dialogRef.afterClosed().subscribe(() => {
+          this.onTreeChanged();
+        });
+      },
+      error: (e) => {
+        this.snackBar.open(e, undefined, {
           duration: 1500,
         });
-    }
+      },
+    });
+  }
+
+  deleteFeature(node: IFlatNode): void {
+    this.featuresService.getFeature(node.id).subscribe({
+      next: (feature) => {
+        const dialogRef = this.dialog.open(
+          DeleteFeatureConfirmationModalComponent,
+          {
+            data: feature,
+          }
+        );
+
+        dialogRef.afterClosed().subscribe(() => {
+          this.onTreeChanged();
+        });
+      },
+      error: (error) => {
+        this.snackBar.open(error, undefined, {
+          duration: 3000,
+        });
+      },
+    });
   }
 }

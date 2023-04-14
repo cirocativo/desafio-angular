@@ -24,7 +24,8 @@ export interface IResource {
   id: string;
 }
 export interface IServiceHandler {
-  feature: IFeature;
+  feature: IFeatureHttp;
+  serviceId: string;
   serviceIndex: number;
 }
 
@@ -32,6 +33,7 @@ export interface FeatureNode {
   name: string;
   description: string;
   id: string;
+  featureId: string;
   index: number;
   method: string;
   children?: FeatureNode[];
