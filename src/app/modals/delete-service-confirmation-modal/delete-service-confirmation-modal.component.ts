@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FeaturesService } from 'src/app/services/features.service';
-import { IServiceHandler, IFeature, IServiceHttp } from 'src/interfaces';
+import { IServiceHandler, IServiceHttp, IFeatureHttp } from 'src/interfaces';
 
 @Component({
   selector: 'app-delete-service-confirmation-modal',
@@ -10,7 +10,7 @@ import { IServiceHandler, IFeature, IServiceHttp } from 'src/interfaces';
   styleUrls: ['./delete-service-confirmation-modal.component.css'],
 })
 export class DeleteServiceConfirmationModalComponent {
-  feature: IFeature;
+  feature: IFeatureHttp;
   service: IServiceHttp = {} as IServiceHttp;
   constructor(
     private snackbar: MatSnackBar,

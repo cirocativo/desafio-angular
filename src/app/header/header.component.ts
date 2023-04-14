@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FeatureNode, IFeature } from 'src/interfaces';
-import { FeaturesService } from '../services/features.service';
+import { FeatureNode, IFeatureHttp } from 'src/interfaces';
 
 @Component({
   selector: 'app-header',
@@ -14,8 +13,6 @@ export class HeaderComponent {
   @Output()
   menuClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private featuresService: FeaturesService) {}
-
   onMenuClicked() {
     this.menuClicked.emit(true);
   }
@@ -24,7 +21,7 @@ export class HeaderComponent {
     this.searchText = text;
   }
 
-  transformToTree(features: IFeature[]): FeatureNode[] {
+  transformToTree(features: IFeatureHttp[]): FeatureNode[] {
     const transformedData: FeatureNode[] = [];
 
     features.forEach((feature) => {
