@@ -1,0 +1,37 @@
+app-header {
+  position: sticky;
+  left: 0;
+  width: 100%;
+  top: 0;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-button {
+  margin-right: 20px;
+}
+
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+app-search-box {
+  margin-left: 50px;
+  margin-top: 1rem;
+  margin-right: 1rem;
+}
+.options-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addFeatureButton {
+  margin: 40px 20px;
+}
+
+.features-container {
+  height: 100%;
+}

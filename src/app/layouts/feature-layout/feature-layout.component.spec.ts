@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderComponent } from './header.component';
+import { FeatureLayoutComponent } from './feature-layout.component';
 
-describe('HeaderComponent', () => {
-  let component: HeaderComponent;
-  let fixture: ComponentFixture<HeaderComponent>;
+describe('FeatureLayoutComponent', () => {
+  let component: FeatureLayoutComponent;
+  let fixture: ComponentFixture<FeatureLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
+      declarations: [ FeatureLayoutComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HeaderComponent);
+    fixture = TestBed.createComponent(FeatureLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

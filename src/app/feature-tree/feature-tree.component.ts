@@ -1,11 +1,20 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
 } from '@angular/material/tree';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+
 import { IFeature } from 'src/interfaces';
 import { NewServiceModalComponent } from '../modals/new-service-modal/new-service-modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
@@ -13,6 +22,7 @@ import { DeleteServiceConfirmationModalComponent } from '../modals/delete-servic
 import { DeleteFeatureConfirmationModalComponent } from '../modals/delete-feature-confirmation-modal/delete-feature-confirmation-modal.component';
 import { EditFeatureModalComponent } from '../modals/edit-feature-modal/edit-feature-modal.component';
 import { FeaturesService } from '../services/features.service';
+import { map, startWith, switchMap } from 'rxjs';
 
 interface ExampleFlatNode {
   expandable: boolean;
@@ -37,13 +47,26 @@ interface FeatureNode {
   templateUrl: './feature-tree.component.html',
   styleUrls: ['./feature-tree.component.css'],
 })
-export class FeatureTreeComponent {
+export class FeatureTreeComponent implements AfterViewInit {
+  length = 50;
+  pageSize = 5;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
+
+  pageEvent!: PageEvent;
+
   @Input() data: FeatureNode[] = [];
 
   @Output() treeChanged: EventEmitter<FeatureNode[]> = new EventEmitter();
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   onTreeChanged() {
     this.treeChanged.emit();
+  }
+
+  ngAfterViewInit() {
+    // this.paginator.page.pipe(() => map((data) => console.log(data)));
   }
 
   private _transformer = (node: FeatureNode, level: number) => {

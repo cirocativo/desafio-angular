@@ -1,25 +1,11 @@
-<app-header (menuClicked)="sideNavComponent.sidenav.toggle()">
-  <h1>Features</h1>
-
-  <app-search-box
-    (searchTextChanged)="onSearchTextChanged($event)"
-  ></app-search-box>
-  <span class="header-spacer"></span>
-
-  <button
-    mat-icon-button
-    class="add-button"
-    matTooltip="Add New Feature"
-    (click)="addNewFeature()"
+<router-outlet *ngIf="!isLoggedIn; else mainApp"></router-outlet>
+<ng-template #mainApp>
+  <app-header (menuClicked)="sideNavComponent.sidenav.toggle()"
+    ><h1>Akiry</h1></app-header
   >
-    <mat-icon>add</mat-icon>
-  </button>
-</app-header>
-<app-side-nav>
-  <div class="main-container">
-    <app-feature-tree
-      [data]="data"
-      (treeChanged)="refreshData()"
-    ></app-feature-tree>
-  </div>
-</app-side-nav>
+  <app-side-nav>
+    <div class="main-container">
+      <router-outlet></router-outlet>
+    </div>
+  </app-side-nav>
+</ng-template>

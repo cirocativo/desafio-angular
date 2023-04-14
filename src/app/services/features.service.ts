@@ -1,11 +1,22 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { features } from 'src/database/features.populate';
-import { IFeature, IFeatureUpdate, IService } from 'src/interfaces';
+import { environment } from 'src/environments/environment.development';
+import {
+  IFeature,
+  IFeatureUpdate,
+  IGetFeaturesResponse,
+  IService,
+} from 'src/interfaces';
 import { v4 as uuid } from 'uuid';
+
 @Injectable({
   providedIn: 'root',
 })
 export class FeaturesService {
+  constructor(private http: HttpClient) {}
+
   createFeature(feature: IFeature): void {
     const id = uuid();
 
@@ -18,6 +29,54 @@ export class FeaturesService {
 
   getFeatures(): IFeature[] {
     return features;
+  }
+
+  getFeaturesHttp(
+    offset: number,
+    limit: number
+  ): Observable<IGetFeaturesResponse> {
+    const token_user = localStorage.getItem('token_user');
+    if (token_user) {
+      return this.http.get<IGetFeaturesResponse>(
+        `${environment.api}/root/features?offset=${offset}&limit=${limit}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + token_user,
+          },
+        }
+      );
+    } else {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Something bad happened; please try again later.';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `An error occurred: ${error.error.message}`;
+    } else if (error.status === 403) {
+      return throwError(
+        () =>
+          new Error('Invalid user token. Please log in again', {
+            cause: 'invalid token',
+          })
+      );
+    } else if (error.status === 0) {
+      errorMessage =
+        'Could not connect to server. Please check your internet connection.';
+    } else {
+      console.log(
+        `Backend returned code ${error.status}, body was:`,
+        error.error
+      );
+    }
+    console.log(error);
+    return throwError(() => new Error(errorMessage));
   }
 
   getFeatureById(id: string): IFeature {

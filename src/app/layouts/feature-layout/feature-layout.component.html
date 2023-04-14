@@ -1,0 +1,28 @@
+<mat-toolbar>
+  <app-search-box
+    (searchTextChanged)="onSearchTextChanged($event)"
+  ></app-search-box>
+  <span class="header-spacer"></span>
+
+  <button
+    mat-icon-button
+    class="add-button"
+    matTooltip="Add New Feature"
+    (click)="addNewFeature()"
+  >
+    <mat-icon>add_circle</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="features-container">
+  <app-feature-tree
+    [data]="data"
+    (treeChanged)="refreshDataHttp()"
+  ></app-feature-tree>
+  <mat-paginator
+    [length]="length"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="handlePageEvent($event)"
+  >
+  </mat-paginator>
+</div>
