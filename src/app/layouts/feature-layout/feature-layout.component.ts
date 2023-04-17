@@ -11,6 +11,7 @@ import { FeaturesService } from 'src/app/services/features.service';
 import { SideNavComponent } from 'src/app/side-nav/side-nav.component';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SearchBoxComponent } from 'src/app/search-box/search-box.component';
 
 @Component({
   selector: 'app-feature-layout',
@@ -34,6 +35,7 @@ export class FeatureLayoutComponent {
 
   @ViewChild(FeatureTreeComponent) featureTreeComponent!: FeatureTreeComponent;
   @ViewChild(SideNavComponent) sideNavComponent!: SideNavComponent;
+  @ViewChild(SearchBoxComponent) searchBoxComponent!: SearchBoxComponent;
 
   constructor(
     public dialog: MatDialog,
@@ -41,8 +43,15 @@ export class FeatureLayoutComponent {
     private snackBar: MatSnackBar
   ) {
     setTimeout(() => {
+      const searchText = localStorage.getItem('searchText');
+
       const pageSize = localStorage.getItem('pageSize');
       const offset = localStorage.getItem('offset');
+
+      if (searchText) {
+        this.searchText = searchText;
+        this.searchBoxComponent.enteredSearchValue = searchText;
+      }
       if (pageSize) this.limit = parseInt(pageSize);
       else {
         this.limit = 5;
@@ -68,6 +77,7 @@ export class FeatureLayoutComponent {
   onSearchTextChanged(text: string) {
     this.searchText = text;
     this.offset = 0;
+    localStorage.setItem('searchText', text);
     this.refreshDataHttp();
   }
   addNewFeature(): void {
