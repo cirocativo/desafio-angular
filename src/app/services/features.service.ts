@@ -137,6 +137,7 @@ export class FeaturesService {
       return this.http
         .delete<IFeatureHttp>(`${environment.api}/root/features/${id}`, {
           headers: {
+            'Content-type': 'application/json',
             Authorization: 'Bearer ' + token_user,
           },
         })
@@ -266,6 +267,7 @@ export class FeaturesService {
           `${environment.api}/root/features/${featureId}/services/${serviceId}`,
           {
             headers: {
+              'Content-type': 'application/json',
               Authorization: 'Bearer ' + token_user,
             },
           }

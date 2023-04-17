@@ -25,3 +25,8 @@ mat-tree {
 .deleteService {
   color: red;
 }
+
+.false-service {
+  opacity: 0.7;
+  font-style: italic;
+}

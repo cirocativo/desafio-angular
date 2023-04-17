@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FeaturesService } from 'src/app/services/features.service';
-import { IService, IServiceHandler } from 'src/interfaces';
+import { IService, IServiceHandler, IServiceHttp } from 'src/interfaces';
 import {
   hasValidCharactersValidator,
   startsWithSlashValidator,
@@ -23,7 +23,8 @@ import {
   styleUrls: ['./edit-service-modal.component.css'],
 })
 export class EditServiceModalComponent implements AfterViewInit {
-  service: IService = {} as IService;
+  sourceService: IServiceHttp = {} as IServiceHttp;
+  service: IServiceHttp = {} as IServiceHttp;
   endpointError: string | null = null;
   hasClickedOnEndpoint = false;
   hasClickedOnDescription = false;
@@ -60,11 +61,11 @@ export class EditServiceModalComponent implements AfterViewInit {
     private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: IServiceHandler
   ) {
-    const sourceService = data.feature.services.find(
+    this.sourceService = data.feature.services.find(
       (service) => service.id === data.serviceId
-    );
+    )!;
 
-    Object.assign(this.service, sourceService);
+    Object.assign(this.service, this.sourceService);
 
     this.endpointInput =
       this.elementRef.nativeElement.querySelector('#endpointInput');
@@ -114,6 +115,7 @@ export class EditServiceModalComponent implements AfterViewInit {
         );
       }
     } catch (error) {
+      console.log('te liga no erro', error);
       this.setRepeatedEndpointError(true);
     }
   }
@@ -164,13 +166,16 @@ export class EditServiceModalComponent implements AfterViewInit {
           });
           this.updateServiceForm.get('endpoint')?.setErrors(null);
           this.updateServiceForm.get('method')?.setErrors(null);
+
+          Object.assign(this.sourceService, this.service);
         },
         error: (err) => {
           this.snackbar.open(err, undefined, {
             duration: 3000,
           });
           this.setRepeatedEndpointError(true);
-          console.log(this.service);
+
+          Object.assign(this.service, this.sourceService);
           throw new Error(err);
         },
       });

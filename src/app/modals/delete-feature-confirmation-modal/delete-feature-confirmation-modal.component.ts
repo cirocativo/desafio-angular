@@ -29,13 +29,14 @@ export class DeleteFeatureConfirmationModalComponent {
         this.snackbar.open('Feature deleted successfully!', undefined, {
           duration: 1500,
         });
+        this.cancel();
       },
       error: (error) => {
         this.snackbar.open(error, undefined, {
           duration: 3000,
         });
+        this.cancel();
       },
     });
-    this.cancel();
   }
 }

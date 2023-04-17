@@ -35,7 +35,7 @@ export class NewServiceModalComponent {
         endsWithValidCharactersValidator,
       ],
     ],
-    description: [''],
+    description: ['', Validators.required],
   });
 
   constructor(
