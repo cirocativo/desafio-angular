@@ -25,7 +25,7 @@ export class FeatureLayoutComponent {
   addButtonTooltip = 'Add Feature';
 
   length = 0;
-  pageSizeOptions = [5, 10, 25];
+  pageSizeOptions = [5, 10];
 
   offset = 0;
   limit = 5;
@@ -54,6 +54,7 @@ export class FeatureLayoutComponent {
 
   onSearchTextChanged(text: string) {
     this.searchText = text;
+    this.offset = 0;
     this.refreshDataHttp();
   }
   addNewFeature(): void {

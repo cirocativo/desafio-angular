@@ -15,12 +15,15 @@
 </mat-toolbar>
 
 <div class="features-container">
-  <app-feature-tree
-    [data]="data"
-    (treeChanged)="refreshDataHttp()"
-  ></app-feature-tree>
+  <div class="features-inner-container">
+    <app-feature-tree
+      [data]="data"
+      (treeChanged)="refreshDataHttp()"
+    ></app-feature-tree>
+  </div>
   <mat-paginator
     [length]="length"
+    [pageIndex]="offset / limit"
     [pageSizeOptions]="pageSizeOptions"
     (page)="handlePageEvent($event)"
   >
