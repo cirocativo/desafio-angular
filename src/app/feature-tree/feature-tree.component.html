@@ -10,6 +10,14 @@
       <mat-icon>delete</mat-icon>
     </button>
   </mat-tree-node>
+  <mat-tree-node
+    *matTreeNodeDef="let node; when: isFalseService"
+    matTreeNodePadding
+    class="false-service"
+  >
+    <button mat-icon-button disabled></button>
+    No service registered for this feature
+  </mat-tree-node>
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
     <button
       mat-icon-button

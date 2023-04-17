@@ -35,6 +35,8 @@ export interface FeatureNode {
   index: number;
   method: string;
   children?: FeatureNode[];
+  hasServices: boolean;
+  isFalseService: boolean;
 }
 
 export interface IAuthGuestResponse {

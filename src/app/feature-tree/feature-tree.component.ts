@@ -31,6 +31,8 @@ interface IFlatNode {
   featureId: string;
   index: number;
   method: string;
+  hasServices: boolean;
+  isFalseService: boolean;
 }
 
 @Component({
@@ -50,8 +52,10 @@ export class FeatureTreeComponent {
   }
 
   private _transformer = (node: FeatureNode, level: number) => {
+    const isFeature = !node.featureId;
+
     return {
-      expandable: !node.featureId,
+      expandable: isFeature,
       name: node.name,
       level: level,
       description: node.description,
@@ -59,6 +63,8 @@ export class FeatureTreeComponent {
       featureId: node.featureId,
       index: node.index,
       method: node.method,
+      hasServices: node.hasServices,
+      isFalseService: node.isFalseService,
     };
   };
 
@@ -86,6 +92,8 @@ export class FeatureTreeComponent {
 
   hasChild = (_: number, node: IFlatNode) => node.expandable;
 
+  isFalseService = (_: number, node: IFlatNode) => node.isFalseService;
+
   openFeatureDetails(node: IFlatNode) {
     this.featuresService.getFeature(node.id).subscribe({
       next: (feature) => {
@@ -105,7 +113,6 @@ export class FeatureTreeComponent {
   }
 
   addService(node: IFlatNode) {
-    console.log(node);
     this.featuresService.getFeature(node.id).subscribe({
       next: (feature) => {
         const dialogRef = this.dialog.open(NewServiceModalComponent, {

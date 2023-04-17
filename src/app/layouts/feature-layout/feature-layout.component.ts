@@ -41,11 +41,24 @@ export class FeatureLayoutComponent {
     private snackBar: MatSnackBar
   ) {
     setTimeout(() => {
+      const pageSize = localStorage.getItem('pageSize');
+      const offset = localStorage.getItem('offset');
+      if (pageSize) this.limit = parseInt(pageSize);
+      else {
+        this.limit = 5;
+        localStorage.setItem('pageSize', '5');
+      }
+      if (offset) this.offset = parseInt(offset);
+      else {
+        this.offset = 0;
+        localStorage.setItem('offset', '0');
+      }
       this.refreshDataHttp();
     });
   }
 
   handlePageEvent(e: PageEvent) {
+    console.log(e);
     this.offset = e.pageIndex * e.pageSize;
     this.limit = e.pageSize;
 
@@ -66,7 +79,9 @@ export class FeatureLayoutComponent {
   }
 
   refreshDataHttp() {
-    console.log('Refreshing data:', this.offset, this.limit);
+    localStorage.setItem('pageSize', this.limit.toString());
+    localStorage.setItem('offset', this.offset.toString());
+
     this.featuresService
       .getFeaturesBySearch(this.offset, this.limit, this.searchText)
       .subscribe({
@@ -116,7 +131,16 @@ export class FeatureLayoutComponent {
       featureNode.name = feature.name;
       featureNode.description = feature.description;
       featureNode.id = feature.id;
+      featureNode.hasServices = feature.services.length > 0;
+
       const services: FeatureNode[] = [];
+      if (feature.services.length === 0) {
+        const serviceNode: FeatureNode = {
+          ...featureNode,
+          isFalseService: true,
+        };
+        services.push(serviceNode);
+      }
       feature.services.forEach((service, index) => {
         const serviceNode = {} as FeatureNode;
         serviceNode.name = service.method + ' ' + service.endpoint;
